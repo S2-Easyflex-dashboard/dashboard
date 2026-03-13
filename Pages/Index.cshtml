@@ -1,10 +1,16 @@
 ﻿@page
 @model IndexModel
+
 @{
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <p>@Model.InternalPercent %</p>
-    <p>@Model.ExternalPercent %</p>
+<div class="w-screen">
+    <div class="m-[50px]">
+        <p>compares between external and internal customers</p>
+        <p>internal customers</p>
+        <p class="bg-sky-300"> @Model.InternalPercent %</p>
+        <p>external customers</p>
+        <p class="bg-green-300">  @Model.ExternalPercent %</p>
+    </div>
 </div>
