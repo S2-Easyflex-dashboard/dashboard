@@ -4,15 +4,15 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace dashboard.Pages;
 public class ExtCompList : PageModel
 { 
-    public class DuplicateIpInfo
+    public class IpInfo
     {
         public string Ip {get; private set;}
         public int Amount {get; private set;}
         public string Service {get; private set;}
-        public DuplicateIpInfo(string ip, string service)
+        public IpInfo(string ip, int amount, string service)
         {
             Ip = ip;
-            Amount = 2;
+            Amount = amount;
             Service = service;
         }
         public void AddToCount(int number)
@@ -21,8 +21,8 @@ public class ExtCompList : PageModel
         }
     }
     public List<CallsViewModel> Calls { get; private set; } = new();
-    public List<string> UniqueIps { get; private set; } = new();
-    public List<DuplicateIpInfo> DuplicateIps {get; private set; } = new();
+    public List<IpInfo> UniqueIps { get; private set; } = new();
+    public List<IpInfo> DuplicateIps {get; private set; } = new();
     public float duplicatePercent {get; private set;}
     public float uniquePercent {get; private set;}
     public void OnGet()
@@ -46,7 +46,7 @@ public class ExtCompList : PageModel
             foreach (var ip in UniqueIps)
             {
                 found = false;
-                if(ip == call.Ip)
+                if(ip.Ip == call.Ip)
                 {
                     duplicate = true;
                     foreach(var duplicateIp in DuplicateIps)
@@ -59,30 +59,30 @@ public class ExtCompList : PageModel
                     }
                     if(!found)
                     {
-                        DuplicateIps.Add(new DuplicateIpInfo(call.Ip, call.Service));
+                        DuplicateIps.Add(new IpInfo(call.Ip, (call.Amount + ip.Amount), call.Service));
                     }
                 }
             }
             if(!duplicate)
             {
-                UniqueIps.Add(call.Ip);
+                UniqueIps.Add(new IpInfo(call.Ip, call.Amount, call.Service));
             }
         }
         foreach(var ip in DuplicateIps)
         {
             foreach(var UniqueIp in UniqueIps)
             {
-                if(UniqueIp == ip.Ip)
+                if(UniqueIp.Ip == ip.Ip)
                 {
                     isDouble = true;
                 }
             }
             if(isDouble)
             {
-                UniqueIps.Remove(ip.Ip);
+                UniqueIps.Remove(ip);
             }
-            duplicatePercent = (float.Parse(DuplicateIps.Count()) / (UniqueIps.Count() + DuplicateIps.Count())) * 100;
-            uniquePercent = (UniqueIps.Count() / (DuplicateIps.Count() + UniqueIps.Count())) * 100;
+            duplicatePercent = ((float)DuplicateIps.Count() / ((float)UniqueIps.Count() + (float)DuplicateIps.Count())) * 100;
+            uniquePercent = ((float)UniqueIps.Count() / ((float)DuplicateIps.Count() + (float)UniqueIps.Count())) * 100;
         }
     }
 }
