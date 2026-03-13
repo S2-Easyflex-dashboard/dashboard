@@ -1,0 +1,8 @@
+@page
+@model dashboard.Pages.ExtCompList
+<div>
+    <p>@Model.DuplicateIps[0].Ip</p>
+    <p>@Model.DuplicateIps[0].Amount</p>
+    <p>@Model.duplicatePercent %</p>
+    <p>@Model.uniquePercent %</p>
+</div>
