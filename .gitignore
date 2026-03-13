@@ -7,7 +7,6 @@
 /.vs/dashboard.slnx/FileContentIndex
 *.v2
 /.vs/dashboard.slnx/v18/.suo
-*.json
 /.vs/dashboard.slnx/v18/DocumentLayout.json
 /.vs/slnx.sqlite
 /bin/Debug/net10.0/dashboard.dll
@@ -38,8 +37,6 @@
 /obj/Debug/net10.0/staticwebassets.build.endpoints.json
 /obj/Debug/net10.0/staticwebassets.build.json.cache
 /obj/Debug/net10.0/staticwebassets.development.json
-*.txt
-*.cs
 *.cache
 *.editorconfig
 /obj/dashboard.csproj.nuget.g.props
