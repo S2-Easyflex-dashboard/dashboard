@@ -9,15 +9,18 @@ public class ExtCompList : PageModel
         public string Ip {get; private set;}
         public int Amount {get; private set;}
         public string Service {get; private set;}
-        public IpInfo(string ip, int amount, string service)
+        public List<int> Users {get; private set;}
+        public IpInfo(string ip, int amount, string service, int user)
         {
             Ip = ip;
             Amount = amount;
             Service = service;
+            Users = [user];
         }
-        public void AddToCount(int number)
+        public void AddToCount(int number, int user)
         {
             Amount = Amount + number;
+            Users.Add(user);
         }
     }
     public List<CallsViewModel> Calls { get; private set; } = new();
@@ -30,7 +33,7 @@ public class ExtCompList : PageModel
         var temp = new CallsViewModel(1, DateOnly.FromDateTime(DateTime.Now), "10.20.30", "no clue", 55, 9022);
         var temp2 = new CallsViewModel(1, DateOnly.FromDateTime(DateTime.Now), "10.20.30", "no clue", 25, 9022);
         var temp4 = new CallsViewModel(1, DateOnly.FromDateTime(DateTime.Now), "10.20.30", "no clue", 25, 9022);
-        var temp5 = new CallsViewModel(1, DateOnly.FromDateTime(DateTime.Now), "10.20.30", "no clue", 25, 9022);
+        var temp5 = new CallsViewModel(1, DateOnly.FromDateTime(DateTime.Now), "11.20.30", "no clue", 25, 9022);
         var temp3 = new CallsViewModel(1, DateOnly.FromDateTime(DateTime.Now), "11.20.30", "no clue", 50, 9022);
         Calls.Add(temp);
         Calls.Add(temp2);
@@ -53,19 +56,19 @@ public class ExtCompList : PageModel
                     {
                         if(duplicateIp.Ip == call.Ip && duplicateIp.Service == call.Service)
                         {
-                            duplicateIp.AddToCount(call.Amount);
+                            duplicateIp.AddToCount(call.Amount, call.CustomerId);
                             found = true;
                         }
                     }
                     if(!found)
                     {
-                        DuplicateIps.Add(new IpInfo(call.Ip, (call.Amount + ip.Amount), call.Service));
+                        DuplicateIps.Add(new IpInfo(call.Ip, (call.Amount + ip.Amount), call.Service, call.CustomerId));
                     }
                 }
             }
             if(!duplicate)
             {
-                UniqueIps.Add(new IpInfo(call.Ip, call.Amount, call.Service));
+                UniqueIps.Add(new IpInfo(call.Ip, call.Amount, call.Service, call.CustomerId));
             }
         }
         foreach(var ip in DuplicateIps)
