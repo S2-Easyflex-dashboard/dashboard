@@ -40,9 +40,12 @@ public class ExtCompList : PageModel
             @"SELECT * FROM calls", conn
         );
         await using var reader = await cmd.ExecuteReaderAsync();
-        
-        
-        
+        while (await reader.ReadAsync())
+        {
+            Calls.Add(new CallsViewModel(reader.GetInt32(6), DateOnly.Parse(reader.GetString(1)), reader.GetString(2), reader.GetString(3), reader.GetInt32(4), reader.GetInt32(5)));
+        }
+        conn.Close();
+
         bool found = false;
         bool duplicate = false;
         bool isDouble = false;
