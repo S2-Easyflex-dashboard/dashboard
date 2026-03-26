@@ -13,4 +13,23 @@
         <p>external customers</p>
         <p class="bg-green-300">  @Model.ExternalPercent %</p>
     </div>
+    <div>
+        <div>
+            <p>compare between thee different levels of calls</p>
+            <p>Managing level:</p>
+            <p>@Model.ManagingLevelPercent %</p>
+            <p>Relation level:</p>
+            <p>@Model.RelationLevelPercent %</p>
+            <p>Temporary worker level:</p>
+            <p>@Model.TempHireLevelPercent %</p>
+        </div>
+        <form>
+            <input type="checkbox" id="tempHireFilter" name="filter" value="temphire" />
+            <label for="tempHireFilter">Include rf in temporary worker numbers</label>
+            <input type="checkbox" id="relationFilter" name="filter" value="relation" />
+            <label for="relationFilter">Include rf in relation numbers</label>
+            <button>get new data</button>
+        </form>
+    </div>
+    
 </div>
