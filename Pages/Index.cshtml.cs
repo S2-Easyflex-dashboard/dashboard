@@ -15,8 +15,25 @@ namespace dashboard.Pages
         public float InternalCustomers { get; private set; } = 0;
         public float ExternalPercent { get; private set; }
         public float InternalPercent { get; private set; }
-        public async Task<IActionResult> OnGet()
+        public float ManagingLevel { get; private set; }
+        public float RelationLevel { get; private set; }
+        public float TempHireLevel { get; private set; }
+        public float ManagingLevelPercent { get; private set; }
+        public float RelationLevelPercent { get; private set; }
+        public float TempHireLevelPercent { get; private set; }
+        public bool RfFilterRelation { get; private set; }
+        public bool RfFilterTempHire { get; private set; }
+        public async Task<IActionResult> OnGet(string[]? filter)
         {
+            if (filter.Contains("temphire"))
+            {
+                RfFilterTempHire = true;
+            }
+
+            if (filter.Contains("relation"))
+            {
+                RfFilterRelation = true;
+            }
             await using var conn = new MySqlConnection(connectionString);
             await conn.OpenAsync();
             await using var cmd = new MySqlCommand(
@@ -40,7 +57,28 @@ namespace dashboard.Pages
                 {
                     ExternalCustomer = ExternalCustomer + call.Amount;
                 }
+
+                if (call.Service.Contains("_fw_") || (RfFilterTempHire && call.Service.Contains("_rf_")))
+                {
+                    TempHireLevel += call.Amount;
+                    if(RfFilterRelation && call.Service.Contains("_rf_"))
+                    {
+                        RelationLevel += call.Amount;
+
+                    }
+                }
+                else if (call.Service.Contains("_rl_") || (RfFilterRelation && call.Service.Contains("_rf_")))
+                {
+                    RelationLevel += call.Amount;
+                }
+                else if (call.Service.Contains("_wm_") || call.Service.Contains("_bi_"))
+                {
+                    ManagingLevel += call.Amount;
+                }
             }
+            ManagingLevelPercent = (ManagingLevel / (ManagingLevel + RelationLevel + TempHireLevel)) * 100;
+            RelationLevelPercent = (RelationLevel / (ManagingLevel + RelationLevel + TempHireLevel)) * 100;
+            TempHireLevelPercent = (TempHireLevel / (ManagingLevel + RelationLevel + TempHireLevel)) * 100;
             ExternalPercent = (ExternalCustomer / (ExternalCustomer + InternalCustomers)) * 100;
             InternalPercent = (InternalCustomers / (InternalCustomers + ExternalCustomer)) * 100;
 
