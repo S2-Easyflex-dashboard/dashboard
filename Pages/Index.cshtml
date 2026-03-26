@@ -6,6 +6,18 @@
 }
 
 <div class="w-screen">
+    <div>
+        <p>Show average calls per day</p>
+        <div class="flex">
+            <p>Monday: @Model.CallsPerDay[1]</p>
+            <p>Tuesday: @Model.CallsPerDay[2]</p>
+            <p>Wednesday @Model.CallsPerDay[3]</p>
+            <p>Thursday: @Model.CallsPerDay[4]</p>
+            <p>Friday @Model.CallsPerDay[5]</p>
+            <p>Saturday: @Model.CallsPerDay[6]</p>
+            <p>Sunday: @Model.CallsPerDay[0]</p>
+        </div>
+    </div>
     <div class="m-[50px]">
         <p>compares between external and internal customers</p>
         <p>internal customers</p>

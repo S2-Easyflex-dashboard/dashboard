@@ -2,19 +2,24 @@ using dashboard.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySql.Data.MySqlClient;
+using System.Linq;
 
 
 namespace dashboard.Pages
 {
     public class IndexModel : PageModel
     {
-
         private string connectionString = "Server= 192.168.133.6;Database=s2group;User Id=dashboard;Password=1234;";
         public List<CallsViewModel> Calls { get; private set; } = new();
         public float ExternalCustomer { get; private set; } = 0;
         public float InternalCustomers { get; private set; } = 0;
         public float ExternalPercent { get; private set; }
         public float InternalPercent { get; private set; }
+        //each user will have the index of their id minus one (for example user 1 will have the index 0)
+        public float[] CallsPerCustomer { get; private set; } = [0, 0, 0, 0, 0];
+        //callsperday will first contain all calls made on a specific weekday, but after all have been added it will have the average instead (the index for this on counts up through the days, starting at sunday)
+        public float[] CallsPerDay { get; private set; } = [0, 0, 0, 0, 0, 0, 0,];
+        public List<DateOnly>[] UniqueDatesByDay { get; private set; } = [new(), new(), new(), new(), new(), new(), new()];
         public async Task<IActionResult> OnGet()
         {
             await using var conn = new MySqlConnection(connectionString);
@@ -32,6 +37,13 @@ namespace dashboard.Pages
 
             foreach (var call in Calls)
             {
+                CallsPerCustomer[call.CustomerId - 1] += call.Amount;
+                CallsPerDay[(int)call.Date.DayOfWeek] += call.Amount;
+                if (!UniqueDatesByDay[(int)call.Date.DayOfWeek].Contains(call.Date))
+                {
+                    UniqueDatesByDay[(int)call.Date.DayOfWeek].Add(call.Date);
+                }
+
                 if (call.Ip.Split(".")[0] == "10")
                 {
                     InternalCustomers = InternalCustomers + call.Amount;
@@ -43,7 +55,7 @@ namespace dashboard.Pages
             }
             ExternalPercent = (ExternalCustomer / (ExternalCustomer + InternalCustomers)) * 100;
             InternalPercent = (InternalCustomers / (InternalCustomers + ExternalCustomer)) * 100;
-
+            CallsPerDay = [CallsPerDay[0] / UniqueDatesByDay[0].Count(), CallsPerDay[1] / UniqueDatesByDay[1].Count(), CallsPerDay[2] / UniqueDatesByDay[2].Count(), CallsPerDay[3] / UniqueDatesByDay[3].Count(), CallsPerDay[4] / UniqueDatesByDay[4].Count(), CallsPerDay[5] / UniqueDatesByDay[5].Count(), CallsPerDay[6] / UniqueDatesByDay[6].Count()];
             return Page();
         }
     }
