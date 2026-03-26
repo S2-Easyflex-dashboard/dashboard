@@ -1,4 +1,4 @@
 <Solution>
+  <Project Path="../UnittestsDashboard/UnittestsDashboard.csproj" Id="2058d0c7-ae97-471b-bbdd-b290da4248e1" />
   <Project Path="dashboard.csproj" />
-  <Project Path="Dashboard.Tests/Dashboard.Tests.csproj" />
 </Solution>
