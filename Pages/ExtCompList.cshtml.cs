@@ -40,7 +40,10 @@ public class ExtCompList : PageModel
             @"SELECT * FROM calls", conn
         );
         await using var reader = await cmd.ExecuteReaderAsync();
-        
+        if(!reader.HasRows)
+        {
+            return Page();
+        }
         
         
         bool found = false;
