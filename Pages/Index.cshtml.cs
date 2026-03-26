@@ -20,8 +20,25 @@ namespace dashboard.Pages
         //callsperday will first contain all calls made on a specific weekday, but after all have been added it will have the average instead (the index for this on counts up through the days, starting at sunday)
         public float[] CallsPerDay { get; private set; } = [0, 0, 0, 0, 0, 0, 0,];
         public List<DateOnly>[] UniqueDatesByDay { get; private set; } = [new(), new(), new(), new(), new(), new(), new()];
-        public async Task<IActionResult> OnGet()
+        public float ManagingLevel { get; private set; }
+        public float RelationLevel { get; private set; }
+        public float TempHireLevel { get; private set; }
+        public float ManagingLevelPercent { get; private set; }
+        public float RelationLevelPercent { get; private set; }
+        public float TempHireLevelPercent { get; private set; }
+        public bool RfFilterRelation { get; private set; }
+        public bool RfFilterTempHire { get; private set; }
+        public async Task<IActionResult> OnGet(string[]? filter)
         {
+            if (filter.Contains("temphire"))
+            {
+                RfFilterTempHire = true;
+            }
+
+            if (filter.Contains("relation"))
+            {
+                RfFilterRelation = true;
+            }
             await using var conn = new MySqlConnection(connectionString);
             await conn.OpenAsync();
             await using var cmd = new MySqlCommand(
@@ -52,7 +69,28 @@ namespace dashboard.Pages
                 {
                     ExternalCustomer = ExternalCustomer + call.Amount;
                 }
+
+                if (call.Service.Contains("_fw_") || (RfFilterTempHire && call.Service.Contains("_rf_")))
+                {
+                    TempHireLevel += call.Amount;
+                    if(RfFilterRelation && call.Service.Contains("_rf_"))
+                    {
+                        RelationLevel += call.Amount;
+
+                    }
+                }
+                else if (call.Service.Contains("_rl_") || (RfFilterRelation && call.Service.Contains("_rf_")))
+                {
+                    RelationLevel += call.Amount;
+                }
+                else if (call.Service.Contains("_wm_") || call.Service.Contains("_bi_"))
+                {
+                    ManagingLevel += call.Amount;
+                }
             }
+            ManagingLevelPercent = (ManagingLevel / (ManagingLevel + RelationLevel + TempHireLevel)) * 100;
+            RelationLevelPercent = (RelationLevel / (ManagingLevel + RelationLevel + TempHireLevel)) * 100;
+            TempHireLevelPercent = (TempHireLevel / (ManagingLevel + RelationLevel + TempHireLevel)) * 100;
             ExternalPercent = (ExternalCustomer / (ExternalCustomer + InternalCustomers)) * 100;
             InternalPercent = (InternalCustomers / (InternalCustomers + ExternalCustomer)) * 100;
             CallsPerDay = [CallsPerDay[0] / UniqueDatesByDay[0].Count(), CallsPerDay[1] / UniqueDatesByDay[1].Count(), CallsPerDay[2] / UniqueDatesByDay[2].Count(), CallsPerDay[3] / UniqueDatesByDay[3].Count(), CallsPerDay[4] / UniqueDatesByDay[4].Count(), CallsPerDay[5] / UniqueDatesByDay[5].Count(), CallsPerDay[6] / UniqueDatesByDay[6].Count()];
