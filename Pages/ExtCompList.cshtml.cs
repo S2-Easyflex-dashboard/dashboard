@@ -1,11 +1,15 @@
 using dashboard.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MySql.Data.MySqlClient;
 
 namespace dashboard.Pages;
 public class ExtCompList : PageModel
 { 
+    private string connectionString = "server=192.168.133.6;Database=s2group;User Id=dashboard;Password=1234;";
     public class IpInfo
     {
+        // public List<IpAdress> Ip {get; private set;} = new();
         public string Ip {get; private set;}
         public int Amount {get; private set;}
         public string Service {get; private set;}
@@ -28,18 +32,17 @@ public class ExtCompList : PageModel
     public List<IpInfo> DuplicateIps {get; private set; } = new();
     public float duplicatePercent {get; private set;}
     public float uniquePercent {get; private set;}
-    public void OnGet()
+    public async Task<IActionResult> OnGet()
     { 
-        var temp = new CallsViewModel(1, DateOnly.FromDateTime(DateTime.Now), "10.20.30", "no clue", 55, 9022);
-        var temp2 = new CallsViewModel(1, DateOnly.FromDateTime(DateTime.Now), "10.20.30", "no clue", 25, 9022);
-        var temp4 = new CallsViewModel(1, DateOnly.FromDateTime(DateTime.Now), "10.20.30", "no clue", 25, 9022);
-        var temp5 = new CallsViewModel(1, DateOnly.FromDateTime(DateTime.Now), "11.20.30", "no clue", 25, 9022);
-        var temp3 = new CallsViewModel(1, DateOnly.FromDateTime(DateTime.Now), "11.20.30", "no clue", 50, 9022);
-        Calls.Add(temp);
-        Calls.Add(temp2);
-        Calls.Add(temp3);
-        Calls.Add(temp4);
-        Calls.Add(temp5);
+        await using var conn = new MySqlConnection(connectionString);
+        await conn.OpenAsync();
+        await using var cmd = new MySqlCommand(
+            @"SELECT * FROM calls", conn
+        );
+        await using var reader = await cmd.ExecuteReaderAsync();
+        
+        
+        
         bool found = false;
         bool duplicate = false;
         bool isDouble = false;
@@ -87,5 +90,6 @@ public class ExtCompList : PageModel
             duplicatePercent = ((float)DuplicateIps.Count() / ((float)UniqueIps.Count() + (float)DuplicateIps.Count())) * 100;
             uniquePercent = ((float)UniqueIps.Count() / ((float)DuplicateIps.Count() + (float)UniqueIps.Count())) * 100;
         }
+        return Page();
     }
 }

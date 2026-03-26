@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="dashboard.csproj" />
+  <Project Path="Dashboard.Tests/Dashboard.Tests.csproj" />
 </Solution>
