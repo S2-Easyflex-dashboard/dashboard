@@ -17,6 +17,13 @@
             <p>Saturday: @Model.CallsPerDay[6]</p>
             <p>Sunday: @Model.CallsPerDay[0]</p>
         </div>
+        <div>
+            <form>
+                <input type="text"  name="serviceFilter"/>
+                <input type="number" name="customerFilter"/>
+                <button>apply filters</button>
+            </form>
+        </div>
     </div>
     <div class="m-[50px]">
         <p>compares between external and internal customers</p>

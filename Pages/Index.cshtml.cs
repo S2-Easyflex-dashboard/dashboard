@@ -28,16 +28,28 @@ namespace dashboard.Pages
         public float TempHireLevelPercent { get; private set; }
         public bool RfFilterRelation { get; private set; }
         public bool RfFilterTempHire { get; private set; }
-        public async Task<IActionResult> OnGet(string[]? filter)
+        public int? CustomerFilter {  get; private set; }
+        public string? ServiceFilter { get; private set; }
+
+
+        public async Task<IActionResult> OnGet(string[]? rfFilter, int? customerFilter, string? serviceFilter)
         {
-            if (filter.Contains("temphire"))
+            if (rfFilter.Contains("temphire"))
             {
                 RfFilterTempHire = true;
             }
 
-            if (filter.Contains("relation"))
+            if (rfFilter.Contains("relation"))
             {
                 RfFilterRelation = true;
+            }
+            if (customerFilter != null)
+            {
+                CustomerFilter = customerFilter;
+            }
+            if (serviceFilter != null) 
+            {
+                ServiceFilter = serviceFilter;
             }
             await using var conn = new MySqlConnection(connectionString);
             await conn.OpenAsync();
@@ -54,11 +66,14 @@ namespace dashboard.Pages
 
             foreach (var call in Calls)
             {
-                CallsPerCustomer[call.CustomerId - 1] += call.Amount;
-                CallsPerDay[(int)call.Date.DayOfWeek] += call.Amount;
-                if (!UniqueDatesByDay[(int)call.Date.DayOfWeek].Contains(call.Date))
+                if ((CustomerFilter == call.CustomerId || CustomerFilter == null ) && (ServiceFilter == call.Service || ServiceFilter == null))
                 {
-                    UniqueDatesByDay[(int)call.Date.DayOfWeek].Add(call.Date);
+                    CallsPerCustomer[call.CustomerId - 1] += call.Amount;
+                    CallsPerDay[(int)call.Date.DayOfWeek] += call.Amount;
+                    if (!UniqueDatesByDay[(int)call.Date.DayOfWeek].Contains(call.Date))
+                    {
+                        UniqueDatesByDay[(int)call.Date.DayOfWeek].Add(call.Date);
+                    }
                 }
 
                 if (call.Ip.Split(".")[0] == "10")
