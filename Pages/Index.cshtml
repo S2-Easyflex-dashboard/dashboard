@@ -7,7 +7,7 @@
 
 <div class="w-screen">
     <div class="flex">
-        <div>
+        <div class="bg-slate-300 p-[10px] m-[20px] rounded-lg h-min">
             <p class="font-bold">Filters:</p>
             <form>
                 <p>Service to filter:</p>
@@ -21,57 +21,57 @@
                 <input type="checkbox" id="relationFilter" name="rfFilter" value="relation" checked="@Model.RfFilterRelation" />
                 <label for="relationFilter">Include rf in relation numbers</label>
                 <p></p>
-                <button>apply filters</button>
+                <button class="p-[3px] bg-slate-100 rounded-lg">apply filters</button>
             </form>
         </div>
-        <div>
+        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
             <p class="font-bold">Show average calls per day</p>
-            <div class="flex">
+            <div class="flex justify-between">
                 <!--has to become a graph-->
                 <div class="m-[5px]">
-                    <p>Monday:</p>
+                    <p class="font-bold">Monday:</p>
                     <p>@Model.CallsPerDay[1]</p>
                 </div>
                 <div class="m-[5px]">
-                    <p>Tuesday:</p>
+                    <p class="font-bold">Tuesday:</p>
                     <p>@Model.CallsPerDay[2]</p>
                 </div>
                 <div class="m-[5px]">
-                    <p>Wednesday:</p>
+                    <p class="font-bold">Wednesday:</p>
                     <p>@Model.CallsPerDay[3]</p>
                 </div>
                 <div class="m-[5px]">
-                    <p>Thursday:</p>
+                    <p class="font-bold">Thursday:</p>
                     <p>@Model.CallsPerDay[4]</p>
                 </div>
                 <div class="m-[5px]">
-                    <p>Friday:</p>
+                    <p class="font-bold">Friday:</p>
                     <p>@Model.CallsPerDay[5]</p>
                 </div>
                 <div class="m-[5px]">
-                    <p>Saturday:</p>
+                    <p class="font-bold">Saturday:</p>
                     <p>@Model.CallsPerDay[6]</p>
                 </div>
                 <div class="m-[5px]">
-                    <p>Sunday:</p>
+                    <p class="font-bold">Sunday:</p>
                     <p>@Model.CallsPerDay[0]</p>
                 </div>
             </div>
         </div>
     </div>
     <div class="flex">
-        <div class="m-[50px]">
-            <p class="font-bold">comparison between external and internal customers:</p>
+        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
+            <p class="font-bold">Comparison between external and internal customers:</p>
             <div>
                 <!--has to become a graph-->
-                <p>internal customers</p>
-                <p class="bg-sky-300"> @Model.InternalPercent %</p>
-                <p>external customers</p>
-                <p class="bg-green-300">  @Model.ExternalPercent %</p>
+                <p>Internal customers:</p>
+                <p> @Model.InternalPercent %</p>
+                <p>External customers:</p>
+                <p>  @Model.ExternalPercent %</p>
             </div>
         </div>
-        <div>
-            <p class="font-bold">compare between thee different levels of calls</p>
+        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
+            <p class="font-bold">Comparison between thee different levels of calls</p>
             <div>
                 <!--has to become a graph-->
                 <p>Managing level:</p>
