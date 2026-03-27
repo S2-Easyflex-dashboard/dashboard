@@ -32,7 +32,7 @@ namespace dashboard.Pages
         public string? ServiceFilter { get; private set; }
 
 
-        public async Task<IActionResult> OnGet(string[]? rfFilter, int? customerFilter, string? serviceFilter)
+        public void OnGet(string[]? rfFilter, int? customerFilter, string? serviceFilter)
         {
             if (rfFilter.Contains("temphire"))
             {
@@ -51,13 +51,13 @@ namespace dashboard.Pages
             {
                 ServiceFilter = serviceFilter;
             }
-            await using var conn = new MySqlConnection(connectionString);
-            await conn.OpenAsync();
-            await using var cmd = new MySqlCommand(
-                @"SELECT * FROM calls", conn
+            using var conn = new MySqlConnection(connectionString);
+            conn.Open();
+            using var cmd = new MySqlCommand(
+                @"SELECT * FROM calls WHERE service LIKE 'ds_%'", conn
             );
-            await using var reader = await cmd.ExecuteReaderAsync(); // here
-            while (await reader.ReadAsync())
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
             {
                 Calls.Add(new CallsViewModel(reader.GetInt32(6), DateOnly.Parse(reader.GetString(1)), reader.GetString(2), reader.GetString(3), reader.GetInt32(4), reader.GetInt32(5)));
             }
@@ -109,7 +109,6 @@ namespace dashboard.Pages
             ExternalPercent = (ExternalCustomer / (ExternalCustomer + InternalCustomers)) * 100;
             InternalPercent = (InternalCustomers / (InternalCustomers + ExternalCustomer)) * 100;
             CallsPerDay = [CallsPerDay[0] / UniqueDatesByDay[0].Count(), CallsPerDay[1] / UniqueDatesByDay[1].Count(), CallsPerDay[2] / UniqueDatesByDay[2].Count(), CallsPerDay[3] / UniqueDatesByDay[3].Count(), CallsPerDay[4] / UniqueDatesByDay[4].Count(), CallsPerDay[5] / UniqueDatesByDay[5].Count(), CallsPerDay[6] / UniqueDatesByDay[6].Count()];
-            return Page();
         }
     }
 }
