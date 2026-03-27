@@ -6,49 +6,81 @@
 }
 
 <div class="w-screen">
-    <div>
-        <p>Show average calls per day</p>
-        <div class="flex">
-            <p>Monday: @Model.CallsPerDay[1]</p>
-            <p>Tuesday: @Model.CallsPerDay[2]</p>
-            <p>Wednesday @Model.CallsPerDay[3]</p>
-            <p>Thursday: @Model.CallsPerDay[4]</p>
-            <p>Friday @Model.CallsPerDay[5]</p>
-            <p>Saturday: @Model.CallsPerDay[6]</p>
-            <p>Sunday: @Model.CallsPerDay[0]</p>
-        </div>
-        <div>
+    <div class="flex">
+        <div class="bg-slate-300 p-[10px] m-[20px] rounded-lg h-min">
+            <p class="font-bold">Filters:</p>
             <form>
-                <input type="text"  name="serviceFilter"/>
-                <input type="number" name="customerFilter"/>
-                <button>apply filters</button>
+                <p>Service to filter:</p>
+                <input type="text" name="serviceFilter" value="@Model.ServiceFilter"/>
+                <p>Customer Id to filter:</p>
+                <input type="number" name="customerFilter" value="@Model.CustomerFilter" />
+                <p></p>
+                <input type="checkbox" id="tempHireFilter" name="rfFilter" value="temphire" checked=@Model.RfFilterTempHire />
+                <label for="tempHireFilter">Include rf in temporary worker numbers</label>
+                <p></p>
+                <input type="checkbox" id="relationFilter" name="rfFilter" value="relation" checked="@Model.RfFilterRelation" />
+                <label for="relationFilter">Include rf in relation numbers</label>
+                <p></p>
+                <button class="p-[3px] bg-slate-100 rounded-lg">apply filters</button>
             </form>
         </div>
-    </div>
-    <div class="m-[50px]">
-        <p>compares between external and internal customers</p>
-        <p>internal customers</p>
-        <p class="bg-sky-300"> @Model.InternalPercent %</p>
-        <p>external customers</p>
-        <p class="bg-green-300">  @Model.ExternalPercent %</p>
-    </div>
-    <div>
-        <div>
-            <p>compare between thee different levels of calls</p>
-            <p>Managing level:</p>
-            <p>@Model.ManagingLevelPercent %</p>
-            <p>Relation level:</p>
-            <p>@Model.RelationLevelPercent %</p>
-            <p>Temporary worker level:</p>
-            <p>@Model.TempHireLevelPercent %</p>
+        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
+            <p class="font-bold">Show average calls per day</p>
+            <div class="flex justify-between">
+                <!--has to become a graph-->
+                <div class="m-[5px]">
+                    <p class="font-bold">Monday:</p>
+                    <p>@Model.CallsPerDay[1]</p>
+                </div>
+                <div class="m-[5px]">
+                    <p class="font-bold">Tuesday:</p>
+                    <p>@Model.CallsPerDay[2]</p>
+                </div>
+                <div class="m-[5px]">
+                    <p class="font-bold">Wednesday:</p>
+                    <p>@Model.CallsPerDay[3]</p>
+                </div>
+                <div class="m-[5px]">
+                    <p class="font-bold">Thursday:</p>
+                    <p>@Model.CallsPerDay[4]</p>
+                </div>
+                <div class="m-[5px]">
+                    <p class="font-bold">Friday:</p>
+                    <p>@Model.CallsPerDay[5]</p>
+                </div>
+                <div class="m-[5px]">
+                    <p class="font-bold">Saturday:</p>
+                    <p>@Model.CallsPerDay[6]</p>
+                </div>
+                <div class="m-[5px]">
+                    <p class="font-bold">Sunday:</p>
+                    <p>@Model.CallsPerDay[0]</p>
+                </div>
+            </div>
         </div>
-        <form>
-            <input type="checkbox" id="tempHireFilter" name="filter" value="temphire" />
-            <label for="tempHireFilter">Include rf in temporary worker numbers</label>
-            <input type="checkbox" id="relationFilter" name="filter" value="relation" />
-            <label for="relationFilter">Include rf in relation numbers</label>
-            <button>get new data</button>
-        </form>
     </div>
-    
+    <div class="flex">
+        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
+            <p class="font-bold">Comparison between external and internal customers:</p>
+            <div>
+                <!--has to become a graph-->
+                <p>Internal customers:</p>
+                <p> @Model.InternalPercent %</p>
+                <p>External customers:</p>
+                <p>  @Model.ExternalPercent %</p>
+            </div>
+        </div>
+        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
+            <p class="font-bold">Comparison between thee different levels of calls</p>
+            <div>
+                <!--has to become a graph-->
+                <p>Managing level:</p>
+                <p>@Model.ManagingLevelPercent %</p>
+                <p>Relation level:</p>
+                <p>@Model.RelationLevelPercent %</p>
+                <p>Temporary worker level:</p>
+                <p>@Model.TempHireLevelPercent %</p>
+            </div>
+        </div>
+    </div>
 </div>
