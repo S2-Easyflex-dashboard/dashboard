@@ -51,6 +51,9 @@ public class ExtCompList : PageModel
         }
         conn.Close();
 
+        
+        
+        
         bool found = false;
         bool duplicate = false;
         bool isDouble = false;
