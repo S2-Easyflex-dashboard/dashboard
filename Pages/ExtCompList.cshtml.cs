@@ -32,20 +32,28 @@ public class ExtCompList : PageModel
     public List<IpInfo> DuplicateIps {get; private set; } = new();
     public float duplicatePercent {get; private set;}
     public float uniquePercent {get; private set;}
-    public async Task<IActionResult> OnGet()
+    public Task<IActionResult> OnGet()
     { 
-        await using var conn = new MySqlConnection(connectionString);
-        await conn.OpenAsync();
-        await using var cmd = new MySqlCommand(
+        using var conn = new MySqlConnection(connectionString);
+        conn.OpenAsync();
+        using var cmd = new MySqlCommand(
             @"SELECT * FROM calls", conn
         );
-        await using var reader = await cmd.ExecuteReaderAsync();
-        while (await reader.ReadAsync())
+        using var reader = cmd.ExecuteReaderAsync();
+        if(!reader.HasRows)
+        {
+            conn.Close();
+            return Page();
+        }
+        while (reader.Read())
         {
             Calls.Add(new CallsViewModel(reader.GetInt32(6), DateOnly.Parse(reader.GetString(1)), reader.GetString(2), reader.GetString(3), reader.GetInt32(4), reader.GetInt32(5)));
         }
         conn.Close();
 
+        
+        
+        
         bool found = false;
         bool duplicate = false;
         bool isDouble = false;
