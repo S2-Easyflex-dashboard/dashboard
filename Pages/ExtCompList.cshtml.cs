@@ -32,18 +32,18 @@ public class ExtCompList : PageModel
     public List<IpInfo> DuplicateIps {get; private set; } = new();
     public float duplicatePercent {get; private set;}
     public float uniquePercent {get; private set;}
-    public Task<IActionResult> OnGet()
+    public void OnGet()
     { 
         using var conn = new MySqlConnection(connectionString);
-        conn.OpenAsync();
+        conn.Open();
         using var cmd = new MySqlCommand(
             @"SELECT * FROM calls", conn
         );
-        using var reader = cmd.ExecuteReaderAsync();
+        using var reader = cmd.ExecuteReader();
         if(!reader.HasRows)
         {
             conn.Close();
-            return Page();
+            return;
         }
         while (reader.Read())
         {
@@ -101,6 +101,6 @@ public class ExtCompList : PageModel
             duplicatePercent = ((float)DuplicateIps.Count() / ((float)UniqueIps.Count() + (float)DuplicateIps.Count())) * 100;
             uniquePercent = ((float)UniqueIps.Count() / ((float)DuplicateIps.Count() + (float)UniqueIps.Count())) * 100;
         }
-        return Page();
+        return;
     }
 }
