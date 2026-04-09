@@ -26,61 +26,76 @@
         </div>
         <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
             <p class="font-bold">Show average calls per day</p>
-            <div class="flex justify-between">
-                <!--has to become a graph-->
-                <div class="m-[5px]">
-                    <p class="font-bold">Monday:</p>
-                    <p>@Model.CallsPerDay[1]</p>
-                </div>
-                <div class="m-[5px]">
-                    <p class="font-bold">Tuesday:</p>
-                    <p>@Model.CallsPerDay[2]</p>
-                </div>
-                <div class="m-[5px]">
-                    <p class="font-bold">Wednesday:</p>
-                    <p>@Model.CallsPerDay[3]</p>
-                </div>
-                <div class="m-[5px]">
-                    <p class="font-bold">Thursday:</p>
-                    <p>@Model.CallsPerDay[4]</p>
-                </div>
-                <div class="m-[5px]">
-                    <p class="font-bold">Friday:</p>
-                    <p>@Model.CallsPerDay[5]</p>
-                </div>
-                <div class="m-[5px]">
-                    <p class="font-bold">Saturday:</p>
-                    <p>@Model.CallsPerDay[6]</p>
-                </div>
-                <div class="m-[5px]">
-                    <p class="font-bold">Sunday:</p>
-                    <p>@Model.CallsPerDay[0]</p>
-                </div>
-            </div>
+            <canvas id="callsChart"></canvas> 
         </div>
     </div>
     <div class="flex">
         <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
             <p class="font-bold">Comparison between external and internal customers:</p>
-            <div>
-                <!--has to become a graph-->
-                <p>Internal customers:</p>
-                <p> @Model.InternalPercent %</p>
-                <p>External customers:</p>
-                <p>  @Model.ExternalPercent %</p>
-            </div>
+            <!-- Canvas for the pie chart showing internal vs external customers -->
+            <canvas id="customersChart"></canvas>
         </div>
         <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
             <p class="font-bold">Comparison between thee different levels of calls</p>
-            <div>
-                <!--has to become a graph-->
-                <p>Managing level:</p>
-                <p>@Model.ManagingLevelPercent %</p>
-                <p>Relation level:</p>
-                <p>@Model.RelationLevelPercent %</p>
-                <p>Temporary worker level:</p>
-                <p>@Model.TempHireLevelPercent %</p>
-            </div>
+            <canvas id="levelsChart"></canvas>
         </div>
     </div>
 </div>
+<!-- Chart.js library to draw charts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script> 
+
+<script>
+    new Chart(document.getElementById('callsChart'), {
+    type: 'line',
+    data: {
+    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    datasets: [{
+    label: 'Average calls',
+    data: [
+    @Model.CallsPerDay[1],
+    @Model.CallsPerDay[2],
+    @Model.CallsPerDay[3],
+    @Model.CallsPerDay[4],
+    @Model.CallsPerDay[5],
+    @Model.CallsPerDay[6],
+    @Model.CallsPerDay[0]
+    ],
+    borderColor: 'DarkGray',
+    backgroundColor: 'transparent'
+    }]
+    }
+    });
+</script> 
+<!-- Pie chart for internal vs external customers -->
+<script>
+    new Chart(document.getElementById('customersChart'), {
+    type: 'pie',
+    data: {
+    labels: ['Internal customers', 'External customers'],
+    datasets: [{
+    data: [
+    @Model.InternalPercent,
+    @Model.ExternalPercent
+    ],
+    backgroundColor: ['#378ADD', '#1D9E75']
+    }]
+    }
+    });
+</script>
+<!-- Pie chart for different levels of calls -->
+<script>
+    new Chart(document.getElementById('levelsChart'), {
+    type: 'pie',
+    data: {
+    labels: ['Managing level', 'Relation level', 'Temporary worker level'],
+    datasets: [{
+    data: [
+    @Model.ManagingLevelPercent,
+    @Model.RelationLevelPercent,
+    @Model.TempHireLevelPercent
+    ],
+    backgroundColor: ['#378ADD', '#1D9E75', '#85B7EB']
+    }]
+    }
+    });
+</script>
