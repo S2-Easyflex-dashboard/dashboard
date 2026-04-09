@@ -2,29 +2,31 @@ using dashboard.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySql.Data.MySqlClient;
+using System.Runtime.CompilerServices;
 
 namespace dashboard.Pages;
 public class ExtCompList : PageModel
-{ 
+{
     private string connectionString = "server=192.168.133.6;Database=s2group;User Id=dashboard;Password=1234;";
     public class IpInfo
     {
         // public List<IpAdress> Ip {get; private set;} = new();
-        public string Ip {get; private set;}
-        public int Amount {get; private set;}
-        public string Service {get; private set;}
-        public List<int> Users {get; private set;}
-        public IpInfo(string ip, int amount, string service, int user)
+        public string Ip { get; private set; }
+        public int Amount { get; private set; }
+        public List<int> Users { get; private set; }
+        public IpInfo(string ip, int amount, int user)
         {
             Ip = ip;
             Amount = amount;
-            Service = service;
             Users = [user];
         }
-        public void AddToCount(int number, int user)
+        public void AddToCount(int number, int? user)
         {
             Amount = Amount + number;
-            Users.Add(user);
+            if (user != null)
+            {
+                Users.Add((int)user);
+            }
         }
     }
     public List<CallsViewModel> Calls { get; private set; } = new();
@@ -33,14 +35,14 @@ public class ExtCompList : PageModel
     public float duplicatePercent {get; private set;}
     public float uniquePercent {get; private set;}
     public void OnGet()
-    { 
+    {
         using var conn = new MySqlConnection(connectionString);
         conn.Open();
         using var cmd = new MySqlCommand(
             @"SELECT * FROM calls", conn
         );
         using var reader = cmd.ExecuteReader();
-        if(!reader.HasRows)
+        if (!reader.HasRows)
         {
             conn.Close();
             return;
@@ -50,54 +52,47 @@ public class ExtCompList : PageModel
             Calls.Add(new CallsViewModel(reader.GetInt32(6), DateOnly.Parse(reader.GetString(1)), reader.GetString(2), reader.GetString(3), reader.GetInt32(4), reader.GetInt32(5)));
         }
         conn.Close();
-
-        bool found = false;
-        bool duplicate = false;
-        bool isDouble = false;
-        foreach (var call in Calls)
+        foreach(var call in Calls)
         {
-            duplicate = false;
-            foreach (var ip in UniqueIps)
+            IpInfo? duplicateIp = null;
+            bool duplicateAlreadyFound = false;
+            foreach (var ipInformation in DuplicateIps)
             {
-                found = false;
-                if(ip.Ip == call.Ip)
+                if (call.Ip == ipInformation.Ip && !ipInformation.Users.Contains(call.CustomerId))
                 {
-                    duplicate = true;
-                    foreach(var duplicateIp in DuplicateIps)
+                    ipInformation.AddToCount(call.Amount, call.CustomerId);
+                    duplicateAlreadyFound = true;
+                }
+                else if (call.Ip == ipInformation.Ip && ipInformation.Users.Contains(call.CustomerId))
+                {
+                    ipInformation.AddToCount(call.Amount, null);
+                    duplicateAlreadyFound = true;
+                }
+            }
+            if (!duplicateAlreadyFound)
+            {
+                foreach (var ipInformation in UniqueIps)
+                {
+                    if (call.Ip == ipInformation.Ip && !ipInformation.Users.Contains(call.CustomerId))
                     {
-                        if(duplicateIp.Ip == call.Ip && duplicateIp.Service == call.Service)
-                        {
-                            duplicateIp.AddToCount(call.Amount, call.CustomerId);
-                            found = true;
-                        }
+                        ipInformation.AddToCount(call.Amount, call.CustomerId);
+                        duplicateIp = ipInformation;
                     }
-                    if(!found)
+                    else if (call.Ip == ipInformation.Ip && ipInformation.Users.Contains(call.CustomerId))
                     {
-                        DuplicateIps.Add(new IpInfo(call.Ip, (call.Amount + ip.Amount), call.Service, call.CustomerId));
+                        ipInformation.AddToCount(call.Amount, null);
                     }
                 }
             }
-            if(!duplicate)
+            if (duplicateIp != null)
             {
-                UniqueIps.Add(new IpInfo(call.Ip, call.Amount, call.Service, call.CustomerId));
+                DuplicateIps.Add(duplicateIp);
+                UniqueIps.Remove(duplicateIp);
+            }
+            else
+            {
+                UniqueIps.Add(new IpInfo(call.Ip, call.Amount, call.CustomerId));
             }
         }
-        foreach(var ip in DuplicateIps)
-        {
-            foreach(var UniqueIp in UniqueIps)
-            {
-                if(UniqueIp.Ip == ip.Ip)
-                {
-                    isDouble = true;
-                }
-            }
-            if(isDouble)
-            {
-                UniqueIps.Remove(ip);
-            }
-            duplicatePercent = ((float)DuplicateIps.Count() / ((float)UniqueIps.Count() + (float)DuplicateIps.Count())) * 100;
-            uniquePercent = ((float)UniqueIps.Count() / ((float)DuplicateIps.Count() + (float)UniqueIps.Count())) * 100;
-        }
-        return;
     }
 }
