@@ -1,17 +1,19 @@
 @page
 @model dashboard.Pages.ExtCompList
-<div class="p-4 mx-auto">
+@{
+    ViewData["Title"] = "List of external companies";
+}
+
+<div class="w-screen p-[20px]">
+    <h1 class="font-bold mb-3">List of duplicate ip adresses (split per service):</h1>
     <div>
-        <h1 class="pb-4 font-bold">IP address</h1>
         @foreach(var ip in Model.DuplicateIps){
-            <div class="flex">
-                <div class="rounded-md bg-gray-300 p-3 mb-3 flex w-full mr-4">
+            <div>
+                <div class="rounded-md bg-gray-300 p-3 mb-3 flex justify-between w-full mr-4">
                     <p>IP: @ip.Ip</p>
-                    <p class = "ml-5">Amount: @ip.Amount</p>
-                    <p class = "ml-5">Service: @ip.Service</p>
-                </div>
-                <div class="w-full rounded-md bg-gray-300 flex mb-3 p-3">
-                    <p>@ip.Users[0]</p>
+                    <p>Amount: @ip.Amount</p>
+                    <p>Service: @ip.Service</p>
+                    <p>Customer ID: @ip.Users[0]</p>
                 </div>
             </div>
         }
