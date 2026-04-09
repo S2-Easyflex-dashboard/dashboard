@@ -5,17 +5,28 @@
 }
 
 <div class="w-screen p-[20px]">
-    <h1 class="font-bold mb-3">List of duplicate ip adresses (split per service):</h1>
-    <div>
+    <h1 class="font-bold mb-3">List of ip adresses used by multiple customers:</h1>
+    <table class="w-full bg-slate-300 rounded-lg">
+        <tr class="text-left">
+            <th class="p-3">Ip:</th>
+            <th class="p-3">Amount:</th>
+            <th class="p-3">User id's:</th>
+        </tr>
         @foreach(var ip in Model.DuplicateIps){
-            <div>
-                <div class="rounded-md bg-gray-300 p-3 mb-3 flex justify-between w-full mr-4">
-                    <p>IP: @ip.Ip</p>
-                    <p>Amount: @ip.Amount</p>
-                    <p>Service: @ip.Service</p>
-                    <p>Customer ID: @ip.Users[0]</p>
-                </div>
-            </div>
+            <tr>
+                <td class="p-3">@ip.Ip</td>
+                <td class="p-3">@ip.Amount</td>
+                <td class="p-3">
+                    @ip.Users[0]
+                    @{
+                        ip.Users.RemoveAt(0);
+                    }
+                    @foreach (var user in ip.Users)
+                    {
+                        <span>, @user</span>
+                    }
+                </td>
+            </tr>
         }
-    </div>
+    </table>
 </div>
