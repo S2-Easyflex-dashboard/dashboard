@@ -1,0 +1,28 @@
+@page
+@model dashboard.Pages.AllCallsOverview
+@{
+    ViewData["Title"] = "All Calls Overview";
+}
+
+<div class="w-screen p-[20px]">
+    <h1 class="font-bold mb-3">Alle Calls</h1>
+    <table class="w-full bg-slate-300 rounded-lg">
+        <tr class="text-left">
+            <th class="p-3">Customer ID:</th>
+            <th class="p-3">Date:</th>
+            <th class="p-3">IP:</th>
+            <th class="p-3">Service:</th>
+            <th class="p-3">Amount:</th>
+        </tr>
+        @foreach (var call in Model.Calls)
+        {
+            <tr>
+                <td class="p-3">@call.CustomerId</td>
+                <td class="p-3">@call.Date</td>
+                <td class="p-3">@call.Ip</td>
+                <td class="p-3">@call.Service</td>
+                <td class="p-3">@call.Amount</td>
+            </tr>
+        }
+    </table>
+</div>
