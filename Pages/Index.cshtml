@@ -10,33 +10,33 @@
         <div class="bg-slate-300 p-[10px] m-[20px] rounded-lg">
             <p class="font-bold">Filters:</p>
             <form>
-                <p>Service to filter:</p>
-                <input type="text" name="serviceFilter" value="@Model.ServiceFilter"/>
-                <p>Customer Id to filter:</p>
-                <input type="number" name="customerFilter" value="@Model.CustomerFilter" />
+                <p>Service om te filteren:</p>
+                <input type="text" name="ServiceFilter" value="@Model.ServiceFilter"/>
+                <p>Klanten Id om te filteren:</p>
+                <input type="number" name="KlantFilter" value="@Model.CustomerFilter" />
                 <p></p>
                 <input type="checkbox" id="tempHireFilter" name="rfFilter" value="temphire" checked=@Model.RfFilterTempHire />
-                <label for="tempHireFilter">Include rf in temporary worker numbers</label>
+                <label for="tempHireFilter">Neem Rf mee in tijdelijke werk nummers</label>
                 <p></p>
                 <input type="checkbox" id="relationFilter" name="rfFilter" value="relation" checked="@Model.RfFilterRelation" />
-                <label for="relationFilter">Include rf in relation numbers</label>
+                <label for="relationFilter">Neem Rf mee in relatie nummers</label>
                 <p></p>
-                <button class="p-[3px] bg-slate-100 rounded-lg">apply filters</button>
+                <button class="p-[3px] bg-slate-100 rounded-lg">Pas filter toe</button>
             </form>
         </div>
-        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] box-shadow">
-            <p class="font-bold">Show average calls per day</p>
+        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
+            <p class="font-bold">Gemiddeld aantal oproepen per dag</p>
             <canvas class="h-full" id="callsChart"></canvas> 
         </div>
     </div>
     <div class="flex">
-        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px]">
-            <p class="font-bold">Comparison between external and internal customers:</p>
+        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
+            <p class="font-bold">Vergelijking tussen externe en interne klanten:</p>
             <!-- Canvas for the pie chart showing internal vs external customers -->
             <canvas id="customersChart"></canvas>
         </div>
-        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px]">
-            <p class="font-bold">Comparison between thee different levels of calls</p>
+        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
+            <p class="font-bold">Vergelijking tussen verschillende oproepniveaus</p>
             <canvas id="levelsChart"></canvas>
         </div>
     </div>
@@ -46,9 +46,9 @@
     new Chart(document.getElementById('callsChart'), {
     type: 'line',
     data: {
-    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    labels: ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'],
     datasets: [{
-    label: 'Average calls',
+    label: 'Gemiddelde oproepen',
     data: [
     @Model.CallsPerDay[1],
     @Model.CallsPerDay[2],
@@ -69,7 +69,7 @@
     new Chart(document.getElementById('customersChart'), {
     type: 'pie',
     data: {
-    labels: ['Internal customers', 'External customers'],
+    labels: ['Interne klanten', 'Externe  klanten'],
     datasets: [{
     data: [
     @Model.InternalCustomers,
@@ -85,7 +85,7 @@
     new Chart(document.getElementById('levelsChart'), {
     type: 'pie',
     data: {
-    labels: ['Managing level', 'Relation level', 'Temporary worker level'],
+    labels: ['Management niveau', 'Relatie Niveau', 'Tijdelijke werker niveau'],
     datasets: [{
     data: [
     @Model.ManagingLevel,
