@@ -7,7 +7,7 @@
 
 <div class="w-screen">
     <div class="flex">
-        <div class="bg-slate-300 p-[10px] m-[20px] rounded-lg h-min">
+        <div class="bg-slate-300 p-[10px] m-[20px] rounded-lg">
             <p class="font-bold">Filters:</p>
             <form>
                 <p>Service to filter:</p>
@@ -24,25 +24,23 @@
                 <button class="p-[3px] bg-slate-100 rounded-lg">apply filters</button>
             </form>
         </div>
-        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
+        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] box-shadow">
             <p class="font-bold">Show average calls per day</p>
-            <canvas id="callsChart"></canvas> 
+            <canvas class="h-full" id="callsChart"></canvas> 
         </div>
     </div>
     <div class="flex">
-        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
+        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px]">
             <p class="font-bold">Comparison between external and internal customers:</p>
             <!-- Canvas for the pie chart showing internal vs external customers -->
             <canvas id="customersChart"></canvas>
         </div>
-        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
+        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px]">
             <p class="font-bold">Comparison between thee different levels of calls</p>
             <canvas id="levelsChart"></canvas>
         </div>
     </div>
 </div>
-<!-- Chart.js library to draw charts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script> 
 
 <script>
     new Chart(document.getElementById('callsChart'), {
@@ -74,8 +72,8 @@
     labels: ['Internal customers', 'External customers'],
     datasets: [{
     data: [
-    @Model.InternalPercent,
-    @Model.ExternalPercent
+    @Model.InternalCustomers,
+    @Model.ExternalCustomer
     ],
     backgroundColor: ['#378ADD', '#1D9E75']
     }]
@@ -90,9 +88,9 @@
     labels: ['Managing level', 'Relation level', 'Temporary worker level'],
     datasets: [{
     data: [
-    @Model.ManagingLevelPercent,
-    @Model.RelationLevelPercent,
-    @Model.TempHireLevelPercent
+    @Model.ManagingLevel,
+    @Model.RelationLevel,
+    @Model.TempHireLevel
     ],
     backgroundColor: ['#378ADD', '#1D9E75', '#85B7EB']
     }]
