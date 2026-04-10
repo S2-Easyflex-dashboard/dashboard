@@ -54,7 +54,7 @@ namespace dashboard.Pages
             using var conn = new MySqlConnection(connectionString);
             conn.Open();
             using var cmd = new MySqlCommand(
-                @"SELECT * FROM calls WHERE service LIKE 'ds_%'", conn
+                @"SELECT * FROM calls", conn
             );
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
