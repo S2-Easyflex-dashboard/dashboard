@@ -17,11 +17,11 @@
                 <td class="p-3">@ip.Ip</td>
                 <td class="p-3">@ip.Amount</td>
                 <td class="p-3">
-                    @ip.Users[0]
+                    @ip.CustomerIds[0]
                     @{
-                        ip.Users.RemoveAt(0);
+                        ip.CustomerIds.RemoveAt(0);
                     }
-                    @foreach (var user in ip.Users)
+                    @foreach (var user in ip.CustomerIds)
                     {
                         <span>, @user</span>
                     }
