@@ -6,6 +6,7 @@
         <title>@ViewData["Title"]</title>
         <script type="importmap"></script>
         <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <link rel="stylesheet" href="~/css/site.css" />
     </head>
     <body>
@@ -14,9 +15,8 @@
             <div class="mx-auto max-w-7xl px-4">
                 <div class="flex h-16 items-center justify-between">
                     <div class="flex space-x-4">
-                        <a asp-page="/" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                        <a asp-page="/Index" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
                         <a asp-page="/ExtCompList" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">ExtCompList</a>
-                        <a asp-page="/Privacy" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Privacy</a>
                     </div>
 
                 </div>
