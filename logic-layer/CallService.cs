@@ -6,11 +6,11 @@ namespace logic_layer
     {
         private CallRepo _callRepo = new CallRepo();
         
-        public List<CallsViewModel> GetAllCalls()
+        public List<CallsModel> GetAllCalls()
         {
             _callRepo.GetAllCalls();
             return _callRepo.CallDTOList
-                .Select(c => new CallsViewModel(c.CustomerId, c.Date, c.Ip, c.Service, c.Amount, c.LicentionNr))
+                .Select(c => new CallsModel(c.CustomerId, c.Date, c.Ip, c.Service, c.Amount, c.LicentionNr))
                 .ToList();
         }
     }

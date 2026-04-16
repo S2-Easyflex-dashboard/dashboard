@@ -1,6 +1,6 @@
 namespace logic_layer
 {
-    public class CallsViewModel
+    public class CallModel
     {
         public int CustomerId { get ; private set; }
         public DateOnly Date { get; private set; }
@@ -9,7 +9,7 @@ namespace logic_layer
         public int Amount { get; private set; }
         public int LicentionNr { get; private set; }
         
-        public CallsViewModel(int customerId, DateOnly date, string ip, string service, int amount, int licentionNr)
+        public CallModel(int customerId, DateOnly date, string ip, string service, int amount, int licentionNr)
         {
             CustomerId = customerId;
             Date = date;

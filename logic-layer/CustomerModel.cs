@@ -2,12 +2,12 @@
 {
     public class CustomerViewModel
     {
-        public int Id { get; private set; }
+        public int CustomerId { get; private set; }
         public string Name { get; private set; }
 
-        public CustomerViewModel(int id, string name)
+        public CustomerViewModel(int customerId, string name)
         {
-            Id = id;
+            CustomerId = customerId;
             Name = name;
         }
     }
