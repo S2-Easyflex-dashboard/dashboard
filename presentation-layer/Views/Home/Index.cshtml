@@ -1,8 +1,101 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@page
+@model presentation_layer.Models.IndexViewModel
+
+@{
+    ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="w-screen">
+    <div class="flex">
+        <div class="bg-slate-300 p-[10px] m-[20px] rounded-lg h-min">
+            <p class="font-bold">Filters:</p>
+            <form>
+                <p>Service om te filteren:</p>
+                <input type="text" name="ServiceFilter" value="@Model.ServiceFilter"/>
+                <p>Klanten Id om te filteren:</p>
+                <input type="number" name="KlantFilter" value="@Model.CustomerFilter" />
+                <p></p>
+                <input type="checkbox" id="tempHireFilter" name="rfFilter" value="temphire" checked=@Model.RfFilterTempHire />
+                <label for="tempHireFilter">Neem Rf mee in tijdelijke werk nummers</label>
+                <p></p>
+                <input type="checkbox" id="relationFilter" name="rfFilter" value="relation" checked="@Model.RfFilterRelation" />
+                <label for="relationFilter">Neem Rf mee in relatie nummers</label>
+                <p></p>
+                <button class="p-[3px] bg-slate-100 rounded-lg">Pas filter toe</button>
+            </form>
+        </div>
+        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
+            <p class="font-bold">Gemiddeld aantal oproepen per dag</p>
+            <canvas id="callsChart"></canvas> 
+        </div>
+    </div>
+    <div class="flex">
+        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
+            <p class="font-bold">Vergelijking tussen externe en interne klanten:</p>
+            <!-- Canvas for the pie chart showing internal vs external customers -->
+            <canvas id="customersChart"></canvas>
+        </div>
+        <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
+            <p class="font-bold">Vergelijking tussen verschillende oproepniveaus</p>
+            <canvas id="levelsChart"></canvas>
+        </div>
+    </div>
 </div>
+<!-- Chart.js library to draw charts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script> 
+
+<script>
+    new Chart(document.getElementById('callsChart'), {
+    type: 'line',
+    data: {
+    labels: ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'],
+    datasets: [{
+    label: 'Gemiddelde oproepen',
+    data: [
+    @Model.CallsPerDay[1],
+    @Model.CallsPerDay[2],
+    @Model.CallsPerDay[3],
+    @Model.CallsPerDay[4],
+    @Model.CallsPerDay[5],
+    @Model.CallsPerDay[6],
+    @Model.CallsPerDay[0]
+    ],
+    borderColor: 'DarkGray',
+    backgroundColor: 'transparent'
+    }]
+    }
+    });
+</script> 
+<!-- Pie chart for internal vs external customers -->
+<script>
+    new Chart(document.getElementById('customersChart'), {
+    type: 'pie',
+    data: {
+    labels: ['Interne klanten', 'Externe  klanten'],
+    datasets: [{
+    data: [
+    @Model.InternalCustomers,
+    @Model.ExternalCustomer
+    ],
+    backgroundColor: ['#378ADD', '#1D9E75']
+    }]
+    }
+    });
+</script>
+<!-- Pie chart for different levels of calls -->
+<script>
+    new Chart(document.getElementById('levelsChart'), {
+    type: 'pie',
+    data: {
+    labels: ['Management niveau', 'Relatie Niveau', 'Tijdelijke werker niveau'],
+    datasets: [{
+    data: [
+    @Model.ManagingLevel,
+    @Model.RelationLevel,
+    @Model.TempHireLevel
+    ],
+    backgroundColor: ['#378ADD', '#1D9E75', '#85B7EB']
+    }]
+    }
+    });
+</script>
