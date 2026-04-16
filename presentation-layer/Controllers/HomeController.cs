@@ -27,7 +27,7 @@ namespace presentation_layer.Controllers
         public IActionResult ExtCompList()
         {
             var viewModel = new ExtCompListViewModel(CallService.DuplicateIps);
-            return View();
+            return View(viewModel);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
