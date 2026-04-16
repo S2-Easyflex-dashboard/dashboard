@@ -1,8 +1,6 @@
-using System.Runtime.InteropServices.JavaScript;
-
-namespace dashboard.ViewModels
+namespace data_layer
 {
-    public class CallsViewModel
+    public class CallDTO
     {
         public int CustomerId { get; private set; }
         public DateOnly Date { get; private set; }
@@ -11,7 +9,7 @@ namespace dashboard.ViewModels
         public int Amount { get; private set; }
         public int LicentionNr { get; private set; }
 
-        public CallsViewModel(int customerId, DateOnly date, string ip, string service, int amount, int licentionNr)
+        public CallDTO(int customerId, DateOnly date, string ip, string service, int amount, int licentionNr)
         {
             CustomerId = customerId;
             Date = date;
