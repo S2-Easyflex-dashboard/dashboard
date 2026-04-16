@@ -6,14 +6,28 @@ namespace presentation_layer.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        CallService CallService = new CallService();
+
+        public IActionResult Index(string[]? rfFilter, int? customerFilter, string? serviceFilter)
         {
-            return View();
+            var viewModel = new IndexViewModel(CallService.ExternalCustomer, CallService.InternalCustomers, CallService.HighestCallTotal, CallService.CallsPerDay, CallService.ManagingLevel, CallService.RelationLevel, CallService.TempHireLevel);
+            viewModel.RfFilterTempHire = rfFilter.Contains("temphire");
+            viewModel.RfFilterRelation = rfFilter.Contains("relation");
+            if (customerFilter != null)
+            {
+                viewModel.CustomerFilter = (int)customerFilter;
+            }
+            if (serviceFilter != null)
+            {
+                viewModel.ServiceFilter = serviceFilter;
+            }
+            return View(viewModel);
         }
 
-        public IActionResult Privacy()
+        public IActionResult ExtCompList()
         {
-            return View();
+            var viewModel = new ExtCompListViewModel(CallService.DuplicateIps);
+            return View(viewModel);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
