@@ -4,14 +4,16 @@ namespace data_layer
 {
     public class PartnerService
     {
-        public PartnerRepo PartnerRepo;
-
-        public List<PartnerModel> GetPartnersByIps(string[] IpAdresses)
+        private PartnerRepo PartnerRepo = new PartnerRepo();
+        public List<PartnerModel> PartnerModelList = [];
+        
+        public PartnerService(List<string> IpAdresses)
         {
             PartnerRepo.GetAllPartnersByIp(IpAdresses);
-            return PartnerRepo.PartnerDTOList
-                .Select(dto => new PartnerViewModel(dto.PartnerId, dto.IpAdress, dto.Name))
-                .ToList();
+            foreach(PartnerDTO partner in PartnerRepo.PartnerDTOList)
+            {
+                PartnerModelList.Add(new PartnerModel(partner.PartnerId, partner.IpAdress, partner.Name));
+            }
         }
     }
 }

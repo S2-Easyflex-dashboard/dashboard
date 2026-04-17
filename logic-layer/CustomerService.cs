@@ -4,33 +4,29 @@ namespace logic_layer
 {
     public class CustomerService
     {
-        private CustomerRepo _customerRepo = new CustomerRepo();
+        private CustomerRepo CustomerRepo = new CustomerRepo();
+        public List<CustomerModel> CustomerModelList { get; private set; } = [];
 
-        public List<CustomerViewModel> GetCustomersByIds(int[] customerIds)
+        public CustomerService(List<int> customerId)
         {
-            _customerRepo.GetAllCustomersByIds(customerIds);
-            return _customerRepo.CustomerDTOList
-                .Select(dto => new CustomerViewModel(dto.CustomerId, dto.Name))
-                .ToList();
+            CustomerRepo.GetAllCustomersByIds(customerId);
+            foreach (CustomerDTO customer in CustomerRepo.CustomerDTOList)
+            {
+                CustomerModelList.Add(new CustomerModel(customer.CustomerId, customer.Name));
+            }
         }
 
-        public string GetCustomerNameById(int customerId)
-        {
-            _customerRepo.GetAllCustomersByIds([customerId]);
-            var customer = _customerRepo.CustomerDTOList.FirstOrDefault();
-            return customer != null ? customer.Name : customerId.ToString();
-        }
-
-        public List<string> GetCustomerNamesByIds(int[] customerIds)
-        {
-            _customerRepo.GetAllCustomersByIds(customerIds);
-            return customerIds
-                .Select(id =>
-                {
-                    var customer = _customerRepo.CustomerDTOList.FirstOrDefault(c => c.CustomerId == id);
-                    return customer != null ? customer.Name : id.ToString();
-                })
-                .ToList();
-        }
+        //public List<string> GetCustomerNamesByIds(int[] customerIds)
+        //{
+        //    List<string> customerNames = [];
+        //    foreach (CustomerModel customer in CustomerModelList)
+        //    {
+        //        if (customerIds.Contains(customer.CustomerId))
+        //        {
+        //            customerNames.Add(customer.Name);
+        //        }
+        //    }
+        //    return customerNames;
+        //}
     }
 }
