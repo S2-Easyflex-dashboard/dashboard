@@ -11,7 +11,7 @@ namespace data_layer
             string commandParts = @"SELECT * FROM partners WHERE 1 = 1";
             foreach(string ip in ipAdress)
             {
-                commandParts = commandParts + " OR ip_adress = " + ip ;
+                commandParts = commandParts + " OR ip_adress = \"" + ip + "\"";
             }
             using var conn = new MySqlConnection(connectionString);
             conn.Open();

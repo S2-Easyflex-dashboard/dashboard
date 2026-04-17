@@ -3,16 +3,19 @@
     public class IpInfoViewModel
     {
         // public List<IpAdress> Ip {get; private set;} = new();
+        public string? CompanyName { get; private set; }
         public string Ip { get; set; }
         public int Amount { get; private set; }
         public List<int> CustomerIds { get; private set; }
         public List<string> CustomerNames { get; private set; } = new();
 
-        public IpInfoViewModel(string ip, int amount, int customerIds)
+        public IpInfoViewModel(string ip, string? companyName, int amount, List<int> customerIds, List<string> customerNames)
         {
             Ip = ip;
+            CompanyName = companyName;
             Amount = amount;
-            CustomerIds = [customerIds];
+            CustomerIds = customerIds;
+            CustomerNames = customerNames;
         }
     }
 }

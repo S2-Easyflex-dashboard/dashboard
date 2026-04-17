@@ -2,9 +2,9 @@
 {
     public class ExtCompListViewModel
     {
-        public IpInfoViewModel[] DuplicateIps { get; private set; }
+        public List<IpInfoViewModel> DuplicateIps { get; private set; }
 
-        public ExtCompListViewModel(IpInfoViewModel[] duplicateIps)
+        public ExtCompListViewModel(List<IpInfoViewModel> duplicateIps)
         {
             DuplicateIps = duplicateIps;
         }

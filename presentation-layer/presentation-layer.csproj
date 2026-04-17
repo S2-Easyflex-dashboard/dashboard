@@ -8,15 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Temp-old-pages\**" />
+    <Content Remove="Views\Temp-old-pages\**" />
+    <EmbeddedResource Remove="Views\Temp-old-pages\**" />
+    <None Remove="Views\Temp-old-pages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Tailwind.Extensions.AspNetCore" Version="1.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\logic-layer\logic-layer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\Temp-old-pages\" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using presentation_layer.Models;
 using System.Diagnostics;
+using logic_layer;
 
 namespace presentation_layer.Controllers
 {
@@ -10,24 +11,17 @@ namespace presentation_layer.Controllers
 
         public IActionResult Index(string[]? rfFilter, int? customerFilter, string? serviceFilter)
         {
-            var viewModel = new IndexViewModel(CallService.ExternalCustomer, CallService.InternalCustomers, CallService.HighestCallTotal, CallService.CallsPerDay, CallService.ManagingLevel, CallService.RelationLevel, CallService.TempHireLevel);
-            viewModel.RfFilterTempHire = rfFilter.Contains("temphire");
-            viewModel.RfFilterRelation = rfFilter.Contains("relation");
-            if (customerFilter != null)
-            {
-                viewModel.CustomerFilter = (int)customerFilter;
-            }
-            if (serviceFilter != null)
-            {
-                viewModel.ServiceFilter = serviceFilter;
-            }
-            return View(viewModel);
+            return View(new IndexViewModel(CallService.GetInternVsExtern(customerFilter, serviceFilter), CallService.GetAverageCallsPerDay(customerFilter, serviceFilter), CallService.SplitCallsPerService(rfFilter.Contains("temphire"), rfFilter.Contains("relation")), rfFilter.Contains("temphire"), rfFilter.Contains("relation"), customerFilter, serviceFilter));
         }
 
         public IActionResult ExtCompList()
         {
-            var viewModel = new ExtCompListViewModel(CallService.DuplicateIps);
-            return View(viewModel);
+            List<IpInfoViewModel> ipInfoViewModel = [];
+            foreach (var ipInfo in CallService.GetDuplicateIpCalls())
+            {
+                ipInfoViewModel.Add(new IpInfoViewModel(ipInfo.Ip, ipInfo.CompanyName, ipInfo.Amount, ipInfo.CustomerIds, ipInfo.CustomerNames));
+            }
+            return View(new ExtCompListViewModel(ipInfoViewModel));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
