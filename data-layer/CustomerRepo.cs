@@ -6,7 +6,7 @@ namespace data_layer
         private string connectionString = "server=192.168.133.6;Database=s2group;User Id=dashboard;Password=1234;";
         public List<CustomerDTO> CustomerDTOList { get; private set; } = [];
 
-        public void GetAllCustomersByIds(int[] customerIds)
+        public void GetAllCustomersByIds(List<int> customerIds)
         {
             string commandParts = @"SELECT * FROM customers WHERE 1 = 1";
             foreach (int id in customerIds)
