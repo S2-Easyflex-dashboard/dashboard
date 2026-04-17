@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>presentation_layer</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Views\Temp-old-pages\**" />
+    <Content Remove="Views\Temp-old-pages\**" />
+    <EmbeddedResource Remove="Views\Temp-old-pages\**" />
+    <None Remove="Views\Temp-old-pages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Tailwind.Extensions.AspNetCore" Version="1.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\logic-layer\logic-layer.csproj" />
+  </ItemGroup>
+
+</Project>
