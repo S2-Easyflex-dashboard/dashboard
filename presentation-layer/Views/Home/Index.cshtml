@@ -2,7 +2,7 @@
 
 <div class="w-screen">
     <div class="flex">
-        <div class="bg-slate-300 p-[10px] m-[20px] rounded-lg h-min">
+        <div class="bg-slate-300 p-[10px] m-[20px] rounded-lg">
             <p class="font-bold">Filters:</p>
             <form>
                 <p>Service om te filteren:</p>
@@ -21,7 +21,7 @@
         </div>
         <div class="bg-slate-200 rounded-lg p-[10px] m-[20px] h-min">
             <p class="font-bold">Gemiddeld aantal oproepen per dag</p>
-            <canvas id="callsChart"></canvas> 
+            <canvas class="h-full" id="callsChart"></canvas> 
         </div>
     </div>
     <div class="flex">
@@ -36,8 +36,6 @@
         </div>
     </div>
 </div>
-<!-- Chart.js library to draw charts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script> 
 
 <script>
     new Chart(document.getElementById('callsChart'), {
