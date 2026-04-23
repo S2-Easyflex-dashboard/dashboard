@@ -1,10 +1,10 @@
 ﻿namespace data_layer
 {
-    public class PartnerDTO
+    public record PartnerDTO
     {
-        public int PartnerId { get; private set; }
-        public string IpAdress { get; private set; }
-        public string Name { get; private set; }
+        public int PartnerId { get; init; }
+        public string IpAdress { get; init; }
+        public string Name { get; init; }
 
         public PartnerDTO(int partnerId, string ipAdress, string name)
         {
