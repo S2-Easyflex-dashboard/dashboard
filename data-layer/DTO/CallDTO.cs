@@ -1,13 +1,13 @@
 namespace data_layer
 {
-    public class CallDTO
+    public record CallDTO
     {
-        public int CustomerId { get; private set; }
-        public DateOnly Date { get; private set; }
-        public string Ip { get; private set; }
-        public string Service { get; private set; }
-        public int Amount { get; private set; }
-        public int LicentionNr { get; private set; }
+        public int CustomerId { get; init; }
+        public DateOnly Date { get; init; }
+        public string Ip { get; init; }
+        public string Service { get; init; }
+        public int Amount { get; init; }
+        public int LicentionNr { get; init; }
 
         public CallDTO(int customerId, DateOnly date, string ip, string service, int amount, int licentionNr)
         {

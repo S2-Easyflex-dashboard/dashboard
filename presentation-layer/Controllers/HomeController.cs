@@ -7,19 +7,21 @@ namespace presentation_layer.Controllers
 {
     public class HomeController : Controller
     {
-        CallService CallService = new CallService();
+        private readonly CallService CallService = new CallService();
 
         public IActionResult Index(string[]? rfFilter, int? customerFilter, string? serviceFilter)
         {
-            return View(new IndexViewModel(CallService.GetInternVsExtern(customerFilter, serviceFilter), CallService.GetAverageCallsPerDay(customerFilter, serviceFilter), CallService.SplitCallsPerService(rfFilter.Contains("temphire"), rfFilter.Contains("relation")), rfFilter.Contains("temphire"), rfFilter.Contains("relation"), customerFilter, serviceFilter));
+            List<CallModel> callModelList = CallService.GetAllCalls();
+            return View(new IndexViewModel(CallService.GetInternVsExtern(customerFilter, serviceFilter, callModelList), CallService.GetAverageCallsPerDay(customerFilter, serviceFilter, callModelList), CallService.SplitCallsPerService(rfFilter.Contains("temphire"), rfFilter.Contains("relation"), callModelList), rfFilter.Contains("temphire"), rfFilter.Contains("relation"), customerFilter, serviceFilter));
         }
 
         public IActionResult ExtCompList()
         {
+            List<CallModel> callModelList = CallService.GetAllCalls();
             List<IpInfoViewModel> ipInfoViewModel = [];
-            foreach (var ipInfo in CallService.GetDuplicateIpCalls())
+            foreach (var ipInfo in CallService.GetDuplicateIpCalls(callModelList))
             {
-                ipInfoViewModel.Add(new IpInfoViewModel(ipInfo.Ip, ipInfo.CompanyName, ipInfo.Amount, ipInfo.CustomerIds, ipInfo.CustomerNames));
+                ipInfoViewModel.Add(new(ipInfo.Ip, ipInfo.CompanyName, ipInfo.Amount, ipInfo.CustomerIds, ipInfo.CustomerNames));
             }
             return View(new ExtCompListViewModel(ipInfoViewModel));
         }

@@ -4,10 +4,10 @@ namespace data_layer
     public class CustomerRepo
     {
         private string connectionString = "server=192.168.133.6;Database=s2group;User Id=dashboard;Password=1234;";
-        public List<CustomerDTO> CustomerDTOList { get; private set; } = [];
 
-        public void GetAllCustomersByIds(List<int> customerIds)
+        public List<CustomerDTO> GetAllCustomersByIds(List<int> customerIds)
         {
+            List<CustomerDTO> customerDTOList = [];
             string commandParts = @"SELECT * FROM customers WHERE 1 = 1";
             foreach (int id in customerIds)
             {
@@ -21,9 +21,10 @@ namespace data_layer
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                CustomerDTOList.Add(new CustomerDTO(reader.GetInt32(0), reader.GetString(1)));
+                customerDTOList.Add(new CustomerDTO(reader.GetInt32(0), reader.GetString(1)));
             }
             conn.Close();
+            return customerDTOList;
         }
     }
 }

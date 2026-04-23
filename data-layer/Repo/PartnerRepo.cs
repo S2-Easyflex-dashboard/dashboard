@@ -4,10 +4,10 @@ namespace data_layer
     public class PartnerRepo
     {
         private string connectionString = "server=192.168.133.6;Database=s2group;User Id=dashboard;Password=1234;";
-        public List<PartnerDTO> PartnerDTOList { get; private set; } = [];
 
-        public void GetAllPartnersByIp(List<string> ipAdress)
+        public List<PartnerDTO> GetAllPartnersByIp(List<string> ipAdress)
         {
+            List<PartnerDTO> partnerDTOList = [];
             string commandParts = @"SELECT * FROM partners WHERE 1 = 1";
             foreach(string ip in ipAdress)
             {
@@ -21,9 +21,10 @@ namespace data_layer
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                PartnerDTOList.Add(new PartnerDTO(reader.GetInt32(0), reader.GetString(1), reader.GetString(2)));
+                partnerDTOList.Add(new PartnerDTO(reader.GetInt32(0), reader.GetString(1), reader.GetString(2)));
             }
             conn.Close();
+            return partnerDTOList;
         }
     }
 }

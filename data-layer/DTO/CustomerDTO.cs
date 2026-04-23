@@ -1,9 +1,9 @@
 ﻿namespace data_layer
 {
-    public class CustomerDTO
+    public record CustomerDTO
     {
-        public int CustomerId { get; private set; }
-        public string Name { get; private set; }
+        public int CustomerId { get; init; }
+        public string Name { get; init; }
 
         public CustomerDTO(int customerId, string name)
         {
