@@ -161,5 +161,74 @@ namespace logic_layer
             }
             return InternExternComparison;
         }
+
+        public static List<AlertModel> GetAlerts(List<CallModel> callModelList)
+        {
+            // Groepeer calls per klant per dag, tel Amount op
+            Dictionary<int, Dictionary<DateOnly, int>> callsPerCustomerPerDay = new();
+
+            foreach (CallModel call in callModelList)
+            {
+                if (!callsPerCustomerPerDay.ContainsKey(call.CustomerId))
+                    callsPerCustomerPerDay[call.CustomerId] = new();
+
+                if (!callsPerCustomerPerDay[call.CustomerId].ContainsKey(call.Date))
+                    callsPerCustomerPerDay[call.CustomerId][call.Date] = 0;
+
+                callsPerCustomerPerDay[call.CustomerId][call.Date] += call.Amount;
+            }
+
+            List<AlertModel> alerts = [];
+
+            foreach (var customer in callsPerCustomerPerDay)
+            {
+                string type = "";
+                List<DateOnly> sortedDates = customer.Value.Keys.OrderBy(d => d).ToList();
+
+                // Check >1440 op 1 dag - direct Probleem
+                foreach (var day in customer.Value)
+                {
+                    if (day.Value > 1440)
+                    {
+                        type = "Probleem";
+                        break;
+                    }
+                }
+
+                if (type != "Probleem")
+                {
+                    // Tel opsomming dagen boven 120
+                    int consecutive = 0;
+                    int maxConsecutive = 0;
+
+                    for (int i = 0; i < sortedDates.Count; i++)
+                    {
+                        if (customer.Value[sortedDates[i]] > 120)
+                        {
+                            consecutive++;
+                            if (i > 0 && sortedDates[i] != sortedDates[i - 1].AddDays(1))
+                                consecutive = 1;
+                        }
+                        else
+                        {
+                            consecutive = 0;
+                        }
+                        if (consecutive > maxConsecutive) maxConsecutive = consecutive;
+                    }
+
+                    if (maxConsecutive >= 10)
+                        type = "Probleem";
+                    else if (maxConsecutive >= 5)
+                        type = "Waarschuwing";
+                    else if (customer.Value.Any(d => d.Value > 120))
+                        type = "Waarschuwing";
+                }
+
+                if (type != "")
+                    alerts.Add(new AlertModel(customer.Key, type, customer.Value));
+            }
+
+            return alerts;
+        }
     }
 }
