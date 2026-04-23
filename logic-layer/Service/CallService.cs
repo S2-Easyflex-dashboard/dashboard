@@ -5,28 +5,29 @@ namespace logic_layer
 {
     public class CallService
     {
-        private CallRepo CallRepo = new CallRepo();
-        public List<CallModel> CallModelList = [];
+        private readonly CallRepo CallRepo = new();
 
-        public CallService()
+        public List<CallModel> GetAllCalls()
         {
-            CallRepo.GetAllCalls();
-            foreach (CallDTO call in CallRepo.CallDTOList)
+            List<CallDTO> callDTOList = CallRepo.GetAllCalls();
+            List<CallModel> callModelList = [];
+            foreach (CallDTO call in callDTOList)
             {
-                CallModelList.Add(new CallModel(call.CustomerId, call.Date, call.Ip, call.Service, call.Amount, call.LicentionNr));
+                callModelList.Add(new(call.CustomerId, call.Date, call.Ip, call.Service, call.Amount, call.LicentionNr));
             }
+            return callModelList;
         }
         
-        public List<IpInfoModel> GetDuplicateIpCalls()
+        public List<IpInfoModel> GetDuplicateIpCalls(List<CallModel> callModelList)
         {
             List<IpInfoModel> UniqueIps = [];
             List<IpInfoModel> DuplicateIps = [];
             List<string> IpList = [];
             List<int> CustomerIdList = [];
-            CustomerService customerService;
-            PartnerService partnerService;
+            CustomerService customerService = new();
+            PartnerService partnerService = new();
             
-            foreach(CallModel call in CallModelList)
+            foreach(CallModel call in callModelList)
             {
                 IpInfoModel? IpToMove = null;
 
@@ -53,7 +54,7 @@ namespace logic_layer
 
                     if (!FoundDuplicate)
                     {
-                        UniqueIps.Add(new IpInfoModel(call.Ip, call.Amount, call.CustomerId));
+                        UniqueIps.Add(new(call.Ip, call.Amount, call.CustomerId));
                     }
                 }
                 else
@@ -69,37 +70,35 @@ namespace logic_layer
                 }
             }
 
-            customerService = new CustomerService(CustomerIdList);
-
-            partnerService = new PartnerService(IpList);
+            List<CustomerModel> customerModelList = customerService.GetAllCustomersById(CustomerIdList);
+            List<PartnerModel> partnerModelList = partnerService.GetALlPartnersByIp(IpList);
 
             foreach(IpInfoModel ip in DuplicateIps)
             {
-                foreach(CustomerModel customer in customerService.CustomerModelList)
+                foreach(CustomerModel customer in customerModelList)
                 {
                     if (ip.CustomerIds.Contains(customer.CustomerId))
                     {
                         ip.AddCustomerName(customer.Name);
                     }
                 }
-                foreach(PartnerModel partner in partnerService.PartnerModelList)
+                foreach(PartnerModel partner in partnerModelList)
                 {
                     if(ip.Ip == partner.IpAdress)
                     {
-                        ip.SetCompanyName(partner.Name);
+                        ip.CompanyName = partner.Name;
                     }
                 }
             }
 
-
             return DuplicateIps;
         }
 
-        public int[] SplitCallsPerService(bool RfTempHireFilter, bool RfRelationFilter)
+        public static int[] SplitCallsPerService(bool RfTempHireFilter, bool RfRelationFilter, List<CallModel> callModelList)
         {
             int[] LevelAmounts = [0, 0, 0];
             //0 is flexlevel, 1 is relationlevel, 2 is managinglevel
-            foreach (CallModel call in CallModelList)
+            foreach (CallModel call in callModelList)
             {
                 if (call.Service.Contains("_fw_") || (RfTempHireFilter && call.Service.Contains("_rf_")))
                 {
@@ -122,12 +121,12 @@ namespace logic_layer
             return LevelAmounts;
         }
 
-        public int[] GetAverageCallsPerDay(int? CustomerFilter, string? ServiceFilter)
+        public static int[] GetAverageCallsPerDay(int? CustomerFilter, string? ServiceFilter, List<CallModel> callModelList)
         {
             int[] CallsPerDay = [0, 0, 0, 0, 0, 0, 0];
             //each index is a day, starting at sunday and counting up, aka sunday is 0, monday is 1.. etc
             List<DateOnly>[] UniqueDatesByDay = [new(), new(), new(), new(), new(), new(), new()];
-            foreach (CallModel call in CallModelList)
+            foreach (CallModel call in callModelList)
             {
                 if ((CustomerFilter == call.CustomerId || CustomerFilter == null) && (ServiceFilter == call.Service || ServiceFilter == null))
                 {
@@ -142,11 +141,11 @@ namespace logic_layer
             return CallsPerDay;
         }
 
-        public int[] GetInternVsExtern(int? CustomerFilter, string? ServiceFilter)
+        public static int[] GetInternVsExtern(int? CustomerFilter, string? ServiceFilter, List<CallModel> callModelList)
         {
             int[] InternExternComparison = [0, 0];
             //internal is 0, external is 1
-            foreach (CallModel call in CallModelList)
+            foreach (CallModel call in callModelList)
             {
                 if ((CustomerFilter == call.CustomerId || CustomerFilter == null) && (ServiceFilter == call.Service || ServiceFilter == null))
                 {
