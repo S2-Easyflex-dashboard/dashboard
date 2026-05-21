@@ -1,0 +1,36 @@
+@model ExtCompListViewModel
+<div class="w-screen p-[20px]">
+    <h1 class="font-bold mb-3">Lijst van IP-adressen die door meerdere klanten worden gebruikt:</h1>
+    <table class="w-full bg-slate-300 rounded-lg">
+        <tr class="text-left">
+            <th class="p-3">IP-adres / Naam:</th>
+            <th class="p-3">Aantal:</th>
+            <th class="p-3">Gebruikers Id's:</th>
+        </tr>
+        @foreach(var ip in Model.DuplicateIps){
+            <tr>
+                @if (ip.CompanyName != null)
+                {
+                    <td>@ip.CompanyName</td>
+                }
+                else
+                {
+                    <td class="p-3">@ip.Ip</td>
+                }
+                <td class="p-3">@ip.Amount</td>
+                <td class="p-3">
+                    @if(ip.CustomerNames[0] != null)
+                    {
+                        @ip.CustomerNames[0]
+                        ip.CustomerNames.RemoveAt(0);
+                    
+                        @foreach (var user in ip.CustomerNames)
+                        {
+                            <span>, @user</span>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

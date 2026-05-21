@@ -1,0 +1,36 @@
+@model presentation_layer.Models.AlertsViewModel
+
+<div class="w-screen">
+    <div class="bg-slate-200 rounded-lg p-[10px] m-[20px]">
+        <p class="font-bold text-lg mb-4">Meldingen overmatig API-gebruik</p>
+
+        @if (!Model.Alerts.Any())
+        {
+            <p>Geen meldingen gevonden.</p>
+        }
+        else
+        {
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="bg-slate-300">
+                        <th class="p-2 text-left rounded-tl-lg">Klant ID</th>
+                        <th class="p-2 text-left">Type melding</th>
+                        <th class="p-2 text-left">Max calls op één dag</th>
+                        <th class="p-2 text-left rounded-tr-lg">Datum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var alert in Model.Alerts.OrderByDescending(a => a.AlertType))
+                    {
+                        <tr class="@(alert.AlertType == "Probleem" ? "bg-red-200" : "bg-yellow-100") border-b border-slate-300">
+                            <td class="p-2">@alert.CustomerId</td>
+                            <td class="p-2 font-bold">@alert.AlertType</td>
+                            <td class="p-2">@alert.MaxCallsOnOneDay</td>
+                            <td class="p-2">@alert.MaxCallsDate</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
