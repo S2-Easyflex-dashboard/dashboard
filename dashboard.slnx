@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="../logic-layer.Tests/logic-layer.Tests.csproj" Id="4b699a0a-8d6d-4ba7-b2ea-34333f751d6d" />
   <Project Path="data-layer/data-layer.csproj" Id="dfc90818-576c-4eb4-bbd8-a1fd7193043e" />
   <Project Path="logic-layer/logic-layer.csproj" Id="ec517f45-ffdc-4e34-8f4f-9d362840a895" />
   <Project Path="presentation-layer/presentation-layer.csproj" />
