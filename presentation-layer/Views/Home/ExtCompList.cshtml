@@ -1,17 +1,32 @@
 @model ExtCompListViewModel
 <div class="w-screen p-[20px]">
     <h1 class="font-bold mb-3">Lijst van IP-adressen die door meerdere klanten worden gebruikt:</h1>
-    <table class="w-full bg-slate-300 rounded-lg">
+
+    <div class="flex gap-4 mb-4">
+        <input type="text"
+               id="searchInput"
+               placeholder="Zoek op naam of IP..."
+               class="bg-slate-200 rounded-lg p-2 w-64"
+               oninput="filterTable()" />
+        <button id="sortBtn"
+                class="bg-slate-300 rounded-lg px-4 py-2 font-bold"
+                onclick="sortTable()">
+            Aantal: Hoog → Laag
+        </button>
+    </div>
+
+    <table class="w-full bg-slate-300 rounded-lg" id="mainTable">
         <tr class="text-left">
             <th class="p-3">IP-adres / Naam:</th>
             <th class="p-3">Aantal:</th>
             <th class="p-3">Gebruikers Id's:</th>
         </tr>
-        @foreach(var ip in Model.DuplicateIps){
+        @foreach (var ip in Model.DuplicateIps)
+        {
             <tr>
                 @if (ip.CompanyName != null)
                 {
-                    <td>@ip.CompanyName</td>
+                    <td class="p-3">@ip.CompanyName</td>
                 }
                 else
                 {
@@ -19,11 +34,11 @@
                 }
                 <td class="p-3">@ip.Amount</td>
                 <td class="p-3">
-                    @if(ip.CustomerNames[0] != null)
+                    @if (ip.CustomerNames[0] != null)
                     {
                         @ip.CustomerNames[0]
                         ip.CustomerNames.RemoveAt(0);
-                    
+
                         @foreach (var user in ip.CustomerNames)
                         {
                             <span>, @user</span>
@@ -34,3 +49,39 @@
         }
     </table>
 </div>
+
+<script>
+    let sortAscending = false;
+
+    function filterTable() {
+        const input = document.getElementById('searchInput').value.toLowerCase();
+        const rows = document.querySelectorAll('#mainTable tr:not(:first-child)');
+
+        rows.forEach(row => {
+            const naam = row.cells[0].textContent.toLowerCase();
+            const gebruikers = row.cells[2].textContent.toLowerCase();
+            if (naam.includes(input) || gebruikers.includes(input)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    function sortTable() {
+        const table = document.getElementById('mainTable');
+        const rows = Array.from(table.querySelectorAll('tr:not(:first-child)'));
+        const btn = document.getElementById('sortBtn');
+
+        rows.sort((a, b) => {
+            const aVal = parseInt(a.cells[1].textContent);
+            const bVal = parseInt(b.cells[1].textContent);
+            return sortAscending ? aVal - bVal : bVal - aVal;
+        });
+
+        rows.forEach(row => table.appendChild(row));
+
+        sortAscending = !sortAscending;
+        btn.textContent = sortAscending ? 'Aantal: Laag → Hoog' : 'Aantal: Hoog → Laag';
+    }
+</script>iv>
