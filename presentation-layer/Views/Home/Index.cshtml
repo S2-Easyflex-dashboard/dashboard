@@ -1,15 +1,4 @@
-﻿@model presentation_layer.Models.IndexViewModel
-@{
-    ViewData["Title"] = "Home page";
-    int totalCustomers = Model.ExternalCustomer + Model.InternalCustomers;
-    int internalPercent = totalCustomers > 0 ? (int)Math.Round((double)Model.InternalCustomers / totalCustomers * 100) : 0;
-    int externalPercent = totalCustomers > 0 ? (int)Math.Round((double)Model.ExternalCustomer / totalCustomers * 100) : 0;
-
-    int totalLevels = Model.ManagingLevel + Model.RelationLevel + Model.TempHireLevel;
-    int managingPercent = totalLevels > 0 ? (int)Math.Round((double)Model.ManagingLevel / totalLevels * 100) : 0;
-    int relationPercent = totalLevels > 0 ? (int)Math.Round((double)Model.RelationLevel / totalLevels * 100) : 0;
-    int tempHirePercent = totalLevels > 0 ? (int)Math.Round((double)Model.TempHireLevel / totalLevels * 100) : 0;
-}
+﻿@model IndexViewModel
 
 <div class="p-6 space-y-6">
     <div class="flex gap-6">
@@ -18,22 +7,22 @@
             <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Filters</p>
             <form method="get">
                 <label class="block text-sm text-gray-600 mb-1" for="serviceFilter">Service om te filteren</label>
-                <input type="text" id="serviceFilter" name="serviceFilter" value="@Model.ServiceFilter"
+                <input type="text" name="ServiceFilter" value="@Model.ServiceFilter"
                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-blue-500" />
 
                 <label class="block text-sm text-gray-600 mt-3 mb-1" for="customerFilter">Klant ID om te filteren</label>
-                <input type="number" id="customerFilter" name="customerFilter" value="@Model.CustomerFilter"
+                <input type="number" name="KlantFilter" value="@Model.CustomerFilter"
                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-blue-500" />
 
                 <div class="flex items-center gap-2 mt-4">
-                    <input type="checkbox" id="tempHireFilter" name="rfFilter" value="temphire"
+                    <input type="checkbox" id="tempHireFilter" name="rfFilter" value="temphire" checked=@Model.RfFilterTempHire
                            @(Model.RfFilterTempHire ? "checked" : "")
                            class="w-4 h-4 accent-blue-600" />
                     <label for="tempHireFilter" class="text-sm text-gray-600">Neem RF mee in tijdelijke werknummers</label>
                 </div>
 
                 <div class="flex items-center gap-2 mt-2">
-                    <input type="checkbox" id="relationFilter" name="rfFilter" value="relation"
+                    <input type="checkbox" id="relationFilter" name="rfFilter" value="relation" checked="@Model.RfFilterRelation"
                            @(Model.RfFilterRelation ? "checked" : "")
                            class="w-4 h-4 accent-blue-600" />
                     <label for="relationFilter" class="text-sm text-gray-600">Neem RF mee in relatienummers</label>
@@ -64,16 +53,16 @@
         <div class="bg-white border border-gray-200 rounded-xl p-5 flex-1">
             <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Vergelijking externe vs interne klanten</p>
             <div class="relative h-56 max-w-xs mx-auto">
-                <canvas id="pieChart1" role="img" aria-label="Taartdiagram interne vs externe klanten"></canvas>
+                <canvas id="customersChart" role="img" aria-label="Taartdiagram interne vs externe klanten"></canvas>
             </div>
             <div class="flex flex-wrap justify-center gap-4 mt-3">
                 <span class="flex items-center gap-1.5 text-xs text-gray-500">
                     <span class="w-2.5 h-2.5 rounded-sm bg-blue-500 inline-block"></span>
-                    Interne klanten &mdash; @internalPercent%
+                    Interne klanten
                 </span>
                 <span class="flex items-center gap-1.5 text-xs text-gray-500">
-                    <span class="w-2.5 h-2.5 rounded-sm inline-block" style="background:#1d9e75"></span>
-                    Externe klanten &mdash; @externalPercent%
+                    <span class="w-2.5 h-2.5 rounded-sm inline-block" ></span>
+                    Externe klanten
                 </span>
             </div>
         </div>
@@ -86,15 +75,15 @@
             <div class="flex flex-wrap justify-center gap-4 mt-3">
                 <span class="flex items-center gap-1.5 text-xs text-gray-500">
                     <span class="w-2.5 h-2.5 rounded-sm bg-blue-500 inline-block"></span>
-                    Management &mdash; @managingPercent%
+                    Management
                 </span>
                 <span class="flex items-center gap-1.5 text-xs text-gray-500">
                     <span class="w-2.5 h-2.5 rounded-sm inline-block" style="background:#1d9e75"></span>
-                    Relatie &mdash; @relationPercent%
+                    Relatie
                 </span>
                 <span class="flex items-center gap-1.5 text-xs text-gray-500">
                     <span class="w-2.5 h-2.5 rounded-sm bg-blue-300 inline-block"></span>
-                    Tijdelijk &mdash; @tempHirePercent%
+                    Tijdelijk
                 </span>
             </div>
         </div>
@@ -154,12 +143,12 @@
         plugins: { legend: { display: false } }
     };
 
-    new Chart(document.getElementById('pieChart1'), {
+    new Chart(document.getElementById('customersChart'), {
         type: 'doughnut',
         data: {
             labels: ['Interne klanten', 'Externe klanten'],
             datasets: [{
-                data: [@internalPercent, @externalPercent],
+                data: [@Model.InternalCustomers, @Model.ExternalCustomer],
                 backgroundColor: ['#3b82f6', '#1d9e75'],
                 borderWidth: 2,
                 borderColor: '#ffffff'
@@ -173,7 +162,7 @@
         data: {
             labels: ['Management niveau', 'Relatie niveau', 'Tijdelijke werker niveau'],
             datasets: [{
-                data: [@managingPercent, @relationPercent, @tempHirePercent],
+                data: [@Model.ManagingLevel, @Model.RelationLevel, @Model.TempHireLevel],
                 backgroundColor: ['#3b82f6', '#1d9e75', '#93c5fd'],
                 borderWidth: 2,
                 borderColor: '#ffffff'
