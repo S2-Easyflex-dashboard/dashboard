@@ -12,7 +12,7 @@ namespace presentation_layer.Controllers
         public IActionResult Index(string[]? rfFilter, int? customerFilter, string? serviceFilter)
         {
             List<CallModel> callModelList = CallService.GetAllCalls();
-            return View(new IndexViewModel(CallService.GetInternVsExtern(customerFilter, serviceFilter, callModelList), CallService.GetAverageCallsPerDay(customerFilter, serviceFilter, callModelList), CallService.SplitCallsPerService(rfFilter.Contains("temphire"), rfFilter.Contains("relation"), callModelList), rfFilter.Contains("temphire"), rfFilter.Contains("relation"), customerFilter, serviceFilter));
+            return View(new IndexViewModel(CallService.GetInternVsExtern(customerFilter, serviceFilter, callModelList), CallService.GetAverageCallsPerDay(customerFilter, serviceFilter, callModelList), CallService.SplitCallsPerService(rfFilter.Contains("temphire"), rfFilter.Contains("relation"), callModelList), rfFilter.Contains("relation"), rfFilter.Contains("temphire"), customerFilter, serviceFilter));
         }
 
         public IActionResult ExtCompList()
