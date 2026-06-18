@@ -137,7 +137,7 @@ namespace logic_layer
         {
             int[] CallsPerDay = [0, 0, 0, 0, 0, 0, 0];
             //each index is a day, starting at sunday and counting up, aka sunday is 0, monday is 1.. etc
-            List<DateOnly>[] UniqueDatesByDay = [new(), new(), new(), new(), new(), new(), new()];
+            List<List<DateOnly>> UniqueDatesByDay = [new(), new(), new(), new(), new(), new(), new()];
             foreach (CallModel call in callModelList)
             {
                 if ((CustomerFilter == call.CustomerId || CustomerFilter == null) && (ServiceFilter == call.Service || ServiceFilter == null))

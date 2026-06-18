@@ -5,15 +5,30 @@
 
         <div class="bg-white border border-gray-200 rounded-xl p-5 w-80 shrink-0">
             <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Filters</p>
-            <form method="get">
+            <form method="post">
                 <label class="block text-sm text-gray-600 mb-1" for="ServiceFilter">Service om te filteren</label>
-                <input type="text" id="ServiceFilter" name="ServiceFilter" value="@Model.ServiceFilter"
-                       class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-blue-500" />
-
-                <label class="block text-sm text-gray-600 mt-3 mb-1" for="KlantFilter">Klant ID om te filteren</label>
-                <input type="number" id="KlantFilter" name="KlantFilter" value="@Model.CustomerFilter"
-                       class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-blue-500" />
-
+                @if (Model.CustomerFilter != null)
+                {
+                    <input type="text" id="ServiceFilter" name="ServiceFilter" value="@Model.ServiceFilter"
+                           class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-blue-500" />
+                }
+                else
+                {
+                    <input type="text" id="ServiceFilter" name="ServiceFilter"
+                           class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-blue-500" />
+                }
+                <label class="block text-sm text-gray-600 mt-3 mb-1" for="klantFilter">Klant ID om te filteren</label>
+                @if (Model.CustomerFilter != null)
+                {
+                    <input type="number" id="klantFilter" name="klantFilter" value="@Model.CustomerFilter" min="1" max="5"
+                           class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-blue-500" />
+                }
+                else
+                {
+                    <input type="number" id="KlantFilter" name="KlantFilter"
+                           class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-blue-500" />
+                }
+                
                 <div class="flex items-center gap-2 mt-4">
                     <input type="checkbox" id="tempHireFilter" name="rfFilter" value="temphire" checked=@Model.RfFilterTempHire
                            @(Model.RfFilterTempHire ? "checked" : "")

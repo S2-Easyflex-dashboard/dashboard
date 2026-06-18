@@ -9,10 +9,10 @@ namespace presentation_layer.Controllers
     {
         private readonly CallService CallService = new CallService();
 
-        public IActionResult Index(string[]? rfFilter, int? customerFilter, string? serviceFilter)
+        public IActionResult Index(string[]? rfFilter, string? serviceFilter, int? klantFilter)
         {
             List<CallModel> callModelList = CallService.GetAllCalls();
-            return View(new IndexViewModel(CallService.GetInternVsExtern(customerFilter, serviceFilter, callModelList), CallService.GetAverageCallsPerDay(customerFilter, serviceFilter, callModelList), CallService.SplitCallsPerService(rfFilter.Contains("temphire"), rfFilter.Contains("relation"), callModelList), rfFilter.Contains("relation"), rfFilter.Contains("temphire"), customerFilter, serviceFilter));
+            return View(new IndexViewModel(CallService.GetInternVsExtern(klantFilter, serviceFilter, callModelList), CallService.GetAverageCallsPerDay(klantFilter, serviceFilter, callModelList), CallService.SplitCallsPerService(rfFilter.Contains("temphire"), rfFilter.Contains("relation"), callModelList), rfFilter.Contains("relation"), rfFilter.Contains("temphire"), klantFilter, serviceFilter));
         }
 
         public IActionResult ExtCompList()
