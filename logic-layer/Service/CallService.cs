@@ -7,6 +7,18 @@ namespace logic_layer
     {
         private readonly CallRepo CallRepo = new();
 
+        private static int TryDivideByZero(int firstValue, int secondValue)
+        {
+            try
+            {
+                return firstValue / secondValue;
+            }
+            catch (DivideByZeroException)
+            {
+                return 0;
+            }
+        }
+
         public List<CallModel> GetAllCalls()
         {
             List<CallDTO> callDTOList = CallRepo.GetAllCalls();
@@ -137,7 +149,7 @@ namespace logic_layer
                     }
                 }
             }
-            CallsPerDay = [CallsPerDay[0] / UniqueDatesByDay[0].Count(), CallsPerDay[1] / UniqueDatesByDay[1].Count(), CallsPerDay[2] / UniqueDatesByDay[2].Count(), CallsPerDay[3] / UniqueDatesByDay[3].Count(), CallsPerDay[4] / UniqueDatesByDay[4].Count(), CallsPerDay[5] / UniqueDatesByDay[5].Count(), CallsPerDay[6] / UniqueDatesByDay[6].Count()];
+            CallsPerDay = [TryDivideByZero(CallsPerDay[0], UniqueDatesByDay[0].Count()), TryDivideByZero(CallsPerDay[1], UniqueDatesByDay[1].Count()), TryDivideByZero(CallsPerDay[2], UniqueDatesByDay[2].Count()), TryDivideByZero(CallsPerDay[3], UniqueDatesByDay[3].Count()), TryDivideByZero(CallsPerDay[4], UniqueDatesByDay[4].Count()), TryDivideByZero(CallsPerDay[5], UniqueDatesByDay[5].Count()), TryDivideByZero(CallsPerDay[6], UniqueDatesByDay[6].Count())];
             return CallsPerDay;
         }
 
@@ -191,7 +203,6 @@ namespace logic_layer
                     if (day.Value > 1440)
                     {
                         type = "Probleem";
-                        break;
                     }
                 }
 
@@ -214,7 +225,7 @@ namespace logic_layer
                             consecutive = 0;
                         }
                         if (consecutive > maxConsecutive) maxConsecutive = consecutive;
-                    }
+                    } 
 
                     if (maxConsecutive >= 10)
                         type = "Probleem";
