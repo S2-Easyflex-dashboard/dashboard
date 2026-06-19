@@ -11,18 +11,22 @@
 </head>
 <body>
     <header>
-        <nav class="bg-gray-800">
-            <div class="mx-auto max-w-7xl px-4">
-                <div class="flex h-16 items-center justify-between">
-                    <div class="flex space-x-4">
-                        <a asp-controller="home" asp-action="Index" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                        <a asp-controller="home" asp-action="ExtCompList" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">ExtCompList</a>
-                        <a asp-controller="home" asp-action="Alerts" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Alerts</a>
-                    </div>
+        
 
+    <main role="main">
+    <nav class="bg-gray-800">
+        <div class="mx-auto max-w-7xl px-4">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex space-x-4">
+                    <a asp-controller="home" asp-action="Index" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                    <a asp-controller="home" asp-action="ExtCompList" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">ExtCompList</a>
+                    <a asp-controller="home" asp-action="Alerts" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Alerts</a>
                 </div>
+
             </div>
-        </nav>
+        </div>
+    </nav>
+    </main>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
